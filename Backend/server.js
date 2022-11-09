@@ -104,6 +104,7 @@ app.post("/api/instructor/create", async (req, res) => {
     console.log(err.message)
   }});
 
+//gets a instructor
 app.get("/api/instructor/:id", async(req, res)=>{
     try{
         const profile = await pool.query('SELECT * from instructors WHERE id = $1', [req.params.id])
@@ -113,8 +114,19 @@ app.get("/api/instructor/:id", async(req, res)=>{
         console.log(err.message)
     }})
 
-
-
+//updates instructor
+app.patch('/api/instructor/:id', (req, res)=>{
+    try{
+        const profile = req.body;
+        Object.keys(profile).forEach(async(key)=>{
+            results= await pool.query(`UPDATE instructors SET ${key} = '${req.body[key]}';`)
+        })
+        res.json({status: 'ok', message: 'profile is updated'})
+    }
+    catch(err){
+        console.log(err.message)
+    }})
+    
 
 
 
