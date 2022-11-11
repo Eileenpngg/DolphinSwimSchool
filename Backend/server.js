@@ -78,7 +78,6 @@ app.get("/api/events/get", async(req, res)=>{
         console.log(err.message)
     }})
 
-
 //update a event
 app.patch('/api/events/:id', async(req, res)=>{
     try{
@@ -90,6 +89,14 @@ app.patch('/api/events/:id', async(req, res)=>{
         console.log(err.message)
     }})
 
+app.delete("/api/event/delete/:id", async(req, res)=>{
+    try{
+        const events = await pool.query(`DELETE from events WHERE id= ${req.params.id}`)
+        res.json({status: 'ok', message: 'event deleted'})
+    }
+    catch(err){
+        console.log(err.message)
+    }})
 // ====================================================================================================================================================================================================================
 
 
@@ -126,12 +133,6 @@ app.patch('/api/instructor/:id', (req, res)=>{
     catch(err){
         console.log(err.message)
     }})
-    
-
-
-
-
-
 
 app.listen(5001,()=>{
     console.log('swim app is running!!')
