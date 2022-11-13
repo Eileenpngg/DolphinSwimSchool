@@ -1,52 +1,30 @@
 import React, {useState} from "react";
 import styles from "./login.module.css";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 const RegisterScreen = (props) => {
+  // To Do: Connect to back end 
+  // Solve the issue of boolean being a string
   const [userDetails, setUserDetails] = useState({});
+  const navigate= useNavigate();
   
  //react-hook-forms functionality
  const {
-    control,
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
-    name: String,
-    age: Number,
-    level: String,
-    contact: Number,
-    is_admin: Boolean,
-    email: String,
-    password: String
-  })>
-  ({
-    defaultValues: {
-        name: "John",
-        age: 12,
-        level: "L2",
-        contact: 12345667,
-        is_admin: false,
-        email: "jonathan",
-        password: 123445677
-    }
-  });
-  const onSubmit = (data) => {
-    setUserDetails(data);
-    console.log(userDetails)
+  } = useForm()
+
+  const onSubmit = async (data) => {
+    const allData= await data
+    setUserDetails(allData);
+    navigate('/registersuccess')
   };
   
   const onError = (errors) => {
     console.log(errors);
   };
-//   const handleRegister = (e) => {
-//     if (registerUser.username && registerUser.password && registerUser.type) {
-//       return putAccount();
-//     } else {
-//       alert("Missing username / password / user type input");
-//     }
-//   };
 return(
 <div>
       <section className="container-md " id="login">
@@ -147,8 +125,8 @@ return(
                   },
                 })}>
                 <option value=''>Student/Instructor</option>
-                <option value= {false}>Student</option>
-                <option value = {true}>Instructor</option>
+                <option value= "false">Student</option>
+                <option value = "true">Instructor</option>
             </select>
 
             </div>
@@ -188,7 +166,7 @@ return(
           </div>
           <p className="mt-2 text-danger text-center">{errors.password?.message}</p>
           <div className="row dflex justify-content-center m-4">
-            <button className="btn btn-secondary w-25" type='submit' >Register</button>
+            <button className="btn btn-secondary w-25" type='submit'>Register</button>
           <p className="text-center">
             Existing user?{" "}
             <a

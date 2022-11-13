@@ -66,7 +66,6 @@ return(
     <button className="btn btn-secondary w-25" type='submit' >Sign Up</button>
     </div>
 </div>
-
 </>
 )
 }
