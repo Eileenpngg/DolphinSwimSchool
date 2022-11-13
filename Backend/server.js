@@ -10,9 +10,9 @@ app.use(express.json())
 //Routes 
 // ================================================================================================= REGISTER =====================================================================================================
 
-app.post('/api/register', async (req, res) => {
+app.post('/api/user/create', async (req, res) => {
     try{
-        const {email, password, is_admin} = req.body
+        const {name,  age, level, contact, is_instructor, email, password} = req.body
         
         const user= await pool.query(`SELECT * from users WHERE email = '${email}'`); 
 
@@ -22,15 +22,22 @@ app.post('/api/register', async (req, res) => {
         }
         const saltRound = 12;
         const bcryptedPassword= await bcrypt.hash(password, saltRound);
-        const newUser= await pool.query(`INSERT INTO users(email, password, is_admin) VALUES ('${email}', '${bcryptedPassword}', ${is_admin})`)
+        console.log(name, age, level, email, contact, is_instructor)
+        const newUser= await pool.query(`INSERT INTO users(email, password) VALUES ('${email}', '${bcryptedPassword}');`)
+        const user_id= await pool.query(`SELECT id FROM users WHERE email= '${email}';`)
+        const id=user_id.rows[0].id
+        const newProfile= await pool.query(`INSERT INTO profiles(id, name, age, level, contact, is_instructor ) VALUES (${id}, '${name}', ${age}, '${level}', ${contact}, '${is_instructor}');`)
+        res.json({status: 'ok', message: 'profile is created'})
+
 } catch (err){
     console.error(err.message)
     res.status(500).send('Server Error')
 }
 })
+
 // ===============================================================================================================================================================================================================
 // ================================================================================================= LOGIN =====================================================================================================
-app.post('/api/login', async (req, res) => {
+app.post('/api/user/login', async (req, res) => {
     try{
         const {email, password} = req.body
         const user= await pool.query(`SELECT * from users WHERE email = '${email}'`);     
@@ -44,11 +51,11 @@ app.post('/api/login', async (req, res) => {
         if (user.rows.length!=0){
             const validPassword= await bcrypt.compare(password, user.rows[0].password)
             const userDetails= await pool.query(`SELECT * from profiles WHERE id = ${user.rows[0].id}`)
-            response.name= userDetails.rows.name
-            response.email= userDetails.rows.email
-            response.level= userDetails.rows.level
-            response.contact= userDetails.rows.contact
-            response.age= userDetails.rows.age
+            response.name= userDetails.rows[0].name
+            response.email= userDetails.rows[0].email
+            response.level= userDetails.rows[0].level
+            response.contact= userDetails.rows[0].contact
+            response.age= userDetails.rows[0].age
 
             if (!validPassword){
                 return res.status(401).json('Password or Email is incorrect')
@@ -62,16 +69,7 @@ app.post('/api/login', async (req, res) => {
 // ===============================================================================================================================================================================================================
 
 // ================================================================================================= STUDENTS =====================================================================================================
-//creates student
-app.post("/api/student/create", async (req, res) => {
-    try{
-   const profile = req.body;
-   const newProfile= await pool.query('INSERT INTO students(name, age, level, contact, email) VALUES ($1, $2, $3, $4, $5)', [profile.name, profile.age, profile.level, profile.contact, profile.email]);     
-   res.json({status: 'ok', message: 'profile is created'})
-    }
-  catch(err){
-    console.log(err.message)
-  }});
+
 
 //gets all students
 app.get("/api/students/getall", async(req, res)=>{

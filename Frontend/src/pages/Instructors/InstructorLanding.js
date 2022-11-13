@@ -1,7 +1,9 @@
 import React from "react"
-import { Navigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import styles from './instructorlanding.module.css'
 const InstructorLanding=()=>{
+const navigate= useNavigate();
+
     return(
     <>
 {/* Navbar */}
@@ -16,7 +18,7 @@ const InstructorLanding=()=>{
     <a class="nav-link" href="#">Term Schedule</a>
   </li>
   <li class="nav-item">
-  <a class="nav-link" href="#">Contact</a>
+  <a class="nav-link" href="#">Apply For Leave</a>
   </li>
 </ul>
 
@@ -30,20 +32,20 @@ const InstructorLanding=()=>{
       alt="kid_swimming"
       className="bg-dark"
     />
-    <p className={`text-center d-flex align-items-center justify-content-center m-0 p-4 w-100 ${styles.card}`} onClick={()=>{Navigate('/book-a-class')}}>
-    Book A Class
+    <p className={`text-center d-flex align-items-center justify-content-center m-0 p-4 w-100 ${styles.card}`} onClick={()=>{navigate('/create-a-class')}}>
+    Create A Class
     </p>
   </div>
   <div className="col-4 d-flex justify-content-center flex-column align-item-center h-100">
   <img src='/events.jpeg' height='330vw' alt="task icon to job list" />
-    <p className={`text-center d-flex align-items-center justify-content-center m-0 p-4 w-100 ${styles.card}`}>
+    <p className={`text-center d-flex align-items-center justify-content-center m-0 p-4 w-100 ${styles.card}`} onClick={()=>{navigate('/events')}}>
     Events
     </p>
   </div>
   <div className="col-4 d-flex justify-content-center flex-column align-item-center h-100">
   <img src='/purchasepackage.webp' alt="task icon to job list" />
-    <p className={`text-center d-flex align-items-center justify-content-center m-0 p-4 w-100 ml-1 ${styles.card}`}>
-    Purchase A package   
+    <p className={`text-center d-flex align-items-center justify-content-center m-0 p-4 w-100 ml-1 ${styles.card}`} onClick={()=>{navigate('/class-schedule')}}>
+    View Class Schedules
     </p>
   </div>
 </div>

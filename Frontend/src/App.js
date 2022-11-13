@@ -9,6 +9,8 @@ import StudentLanding from "./pages/Students/StudentLanding";
 import BookClassForm from "./pages/Students/BookClassForm";
 import PackageForm from "./pages/Students/PackageForm";
 import Events from "./pages/Users/Events";
+import CreateAClassForm from "./pages/Instructors/CreateAClassForm";
+import ClassSchedule from "./pages/Instructors/ClassSchedule";
 function App() {
   const [userDetails, setUserDetails] = useState({});
   return (
@@ -23,7 +25,8 @@ function App() {
 <Route path="/book-a-class" element={<BookClassForm />} />
 <Route path="/package-form" element={<PackageForm />} />
 <Route path="/events" element={<Events />} />
-{/* <Route path="/book-a-class" element={<BookClassForm />} /> */}
+<Route path="/create-a-class" element={<CreateAClassForm />} />
+<Route path="/class-schedule" element={<ClassSchedule/>} />
 </Routes>
 </UserContext.Provider>
     

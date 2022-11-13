@@ -20,6 +20,19 @@ CREATE TABLE sessions(
     end_time TIMESTAMP
 	);
 
+-- seed sessions --
+INSERT INTO sessions(start_time, end_time) VALUES ('8:50', '9:40');
+
+INSERT INTO sessions(start_time, end_time) VALUES ('10:00', '10:50');
+
+INSERT INTO sessions(start_time, end_time) VALUES ('11:10', '12:00');
+
+INSERT INTO sessions(start_time, end_time) VALUES ('14:50', '15:40');
+
+INSERT INTO sessions(start_time, end_time) VALUES ('16:00', '16:50');
+
+INSERT INTO sessions(start_time, end_time) VALUES ('17:10', '18:00');
+
 CREATE TABLE events(
 id SERIAL PRIMARY KEY,
 image TEXT, 

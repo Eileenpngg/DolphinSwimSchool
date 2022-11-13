@@ -1,13 +1,14 @@
-import React, {useState} from "react";
+import React,{useState} from "react";
 import { useNavigate } from "react-router-dom";
 import {useForm} from "react-hook-form";
-const BookClassForm=()=>{
-    // To Do: Connect to back end 
-    // Convert time to unix before sending to backend
-    //Autopoulate name, level, contact and age
+const CreateAClassForm=()=>{
 
-    const navigate= useNavigate();
-    const [bookingDetails, setBookingDetails]= useState()
+// To Do: Connect to back end 
+// Convert time to unix before sending to backend
+//Autopoulate name, level, contact and age
+
+const navigate= useNavigate();
+const [classDetails, setClassDetails]= useState()
 
  //react-hook-forms functionality
  const {
@@ -18,7 +19,7 @@ const BookClassForm=()=>{
 
   const onSubmit = async (data) => {
     const allData= await data
-    setBookingDetails(allData);
+    setClassDetails(allData);
     navigate('/registersuccess')
   };
   
@@ -26,6 +27,7 @@ const BookClassForm=()=>{
     console.log(errors);
   };
     return(
+        <>
         <div>
               <section className="container-md" id="book_class">
                 <form onSubmit={handleSubmit(onSubmit, onError)}>
@@ -160,6 +162,7 @@ const BookClassForm=()=>{
               </section>
             </div>
         )
+        </>
+    )
 }
-
-export default BookClassForm
+export default CreateAClassForm

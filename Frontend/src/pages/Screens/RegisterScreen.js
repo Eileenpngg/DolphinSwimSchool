@@ -21,10 +21,35 @@ const RegisterScreen = (props) => {
     setUserDetails(allData);
     navigate('/registersuccess')
   };
+
+  // const user = 
+  // {
+  //   email: userDetails.email,
+  //   password: userDetails.password
+  // }
   
   const onError = (errors) => {
     console.log(errors);
   };
+
+  console.log(userDetails)
+
+  async function handleRegister(
+    url = "http://127.0.0.1:5001/api/user/create"
+  ) {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+         Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userDetails),
+    });
+    const jResponse = await response.json();
+    console.log(jResponse);
+    return jResponse;
+  }
+
 return(
 <div>
       <section className="container-md " id="login">
@@ -118,7 +143,7 @@ return(
             <div className="form-outline m-4 row justify-content-center">
             <div className="col-md-4">
             <select class="form-select" aria-label="Default select example" 
-            {...register("is_admin", {
+            {...register("is_instructor", {
                   required: {
                     value: true,
                     message: "Please select if you are a Student or Instructor"
@@ -131,7 +156,7 @@ return(
 
             </div>
             </div>
-            <p className="mt-2 text-danger text-center">{errors.is_admin?.message}</p>
+            <p className="mt-2 text-danger text-center">{errors.is_instructor?.message}</p>
 
           <div className="form-outline m-4 row justify-content-center">
             <div className="col-md-4">
@@ -166,7 +191,7 @@ return(
           </div>
           <p className="mt-2 text-danger text-center">{errors.password?.message}</p>
           <div className="row dflex justify-content-center m-4">
-            <button className="btn btn-secondary w-25" type='submit'>Register</button>
+            <button className="btn btn-secondary w-25" type='submit' onClick={()=>handleRegister}>Register</button>
           <p className="text-center">
             Existing user?{" "}
             <a
@@ -186,5 +211,3 @@ return(
 };
 
 export default RegisterScreen;
-
-// onSubmit={handleLogin}
