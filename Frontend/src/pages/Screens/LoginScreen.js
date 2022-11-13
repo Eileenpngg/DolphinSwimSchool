@@ -17,17 +17,16 @@ const LoginScreen = (props) => {
   } = useForm();
 
   const onSubmit = (data) => {
-    setLoginDetails(data);
-
+    handleLogin({ data });
   };
   const onError = (errors) => {
     console.log(errors);
   };
 
-  async function handleLogin(
+  async function handleLogin({
     url = "http://127.0.0.1:5001/api/user/login",
     data = loginDetails,
-  ) {
+  }) {
     const response = await fetch(url, {
       method: "POST",
       headers: {
@@ -90,11 +89,7 @@ const LoginScreen = (props) => {
             {errors.password?.message}
           </p>
           <div className="row dflex justify-content-center m-4">
-            <button
-              className="btn btn-secondary w-25"
-              type="submit"
-              onClick={ () => handleLogin()}
-            >
+            <button className="btn btn-secondary w-25" type="submit">
               LOGIN
             </button>
             <p className="text-center">
@@ -117,4 +112,3 @@ const LoginScreen = (props) => {
 };
 
 export default LoginScreen;
-

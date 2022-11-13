@@ -13,11 +13,48 @@ import CreateAClassForm from "./pages/Instructors/CreateAClassForm";
 import ClassSchedule from "./pages/Instructors/ClassSchedule";
 function App() {
   const [userDetails, setUserDetails] = useState({});
+
+  function displayLandingPage() {
+  console.log(userDetails.is_instructor)
+  switch (userDetails.is_instructor) {
+    case true:
+      return (
+        <InstructorLanding/>
+      );
+    case false:
+      return (
+        <StudentLanding/>
+      );
+    default:
+      return <LoginScreen />;
+  }
+}
+const landingPage = displayLandingPage();
+
+// // Render the profile page depending on what type of user is logged in
+// function displayProfilePage() {
+//   switch (userDetails.type) {
+//     case "jobSeeker":
+//       return (
+//         <JobSeekerProfile
+//           profileIsCompleted={profileIsCompleted}
+//           setProfileIsCompleted={setProfileIsCompleted}
+//           profileData={profileData}
+//           setProfileData={setProfileData}
+//         />
+//       );
+//     case "employer":
+//       return <EmployerProfile employerProfileData={employerProfileData} setEmployerProfileData={setEmployerProfileData}/>;
+//     default:
+//       return <Login />;
+//   }
+// }
+
   return (
     
 <UserContext.Provider value={{ userDetails, setUserDetails }}>
 <Routes>
-<Route path="/" element={<LoginScreen/>} />
+<Route path="/" element={landingPage} />
 <Route path="/register" element={<RegisterScreen/>} />
 <Route path="/registersuccess" element={<RegisterSuccess/>} />
 <Route path="/instructor" element={<InstructorLanding />} />
@@ -29,9 +66,9 @@ function App() {
 <Route path="/class-schedule" element={<ClassSchedule/>} />
 </Routes>
 </UserContext.Provider>
-    
-    // <InstructorLanding/>
+
   );
 }
 
 export default App;
+
