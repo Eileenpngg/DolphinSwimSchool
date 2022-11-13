@@ -63,7 +63,6 @@ const BookClassForm=()=>{
                     <div className="col-md-2"></div>
                     <div className="col-md-2 flex-column">
                         <button className="btn btn-secondary w-100 mb-4" type='submit'>Register</button>
-                        <div>{""}</div>
                         <button className="btn btn-secondary w-100" type='cancel'>Cancel</button>
                     </div>             
                   </div> 
@@ -151,19 +150,12 @@ const BookClassForm=()=>{
                       />
                     <p className="mt-2 text-danger text-center">{errors.time?.message}</p>
                     </div>
-                    <div className="col-md-4"></div>
-                    </div>
-                <div className="form-outline m-4 row justify-content-center">
-
-                
-                </div>
-                  <div className="row dflex justify-content-center">
-                    <div className="col-md-2"></div>
-      
-                  <div className="col-md-2 ">
+                    <div className="col-md-1"></div>
+                    <div className="col-md-3 align-self-end">
                     <img src="/xlab_logo.png" alt="" width="300px"/>
                     </div>
-                  </div>
+                    </div>
+
                 </form>
               </section>
             </div>
