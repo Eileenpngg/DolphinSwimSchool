@@ -2,12 +2,64 @@ const express = require('express')
 const app= express()
 const cors= require('cors')
 const pool = require ('./db')
-
+const bcrypt= require('bcrypt')
 //middleware
 app.use(cors());
 app.use(express.json())
 
 //Routes 
+// ================================================================================================= REGISTER =====================================================================================================
+
+app.post('/api/register', async (req, res) => {
+    try{
+        const {email, password, is_admin} = req.body
+        
+        const user= await pool.query(`SELECT * from users WHERE email = '${email}'`); 
+
+        //Checks if user exist
+        if (user.rows.length!=0){
+            return res.status(401).send('User already exist')
+        }
+        const saltRound = 12;
+        const bcryptedPassword= await bcrypt.hash(password, saltRound);
+        const newUser= await pool.query(`INSERT INTO users(email, password, is_admin) VALUES ('${email}', '${bcryptedPassword}', ${is_admin})`)
+} catch (err){
+    console.error(err.message)
+    res.status(500).send('Server Error')
+}
+})
+// ===============================================================================================================================================================================================================
+// ================================================================================================= LOGIN =====================================================================================================
+app.post('/api/login', async (req, res) => {
+    try{
+        const {email, password} = req.body
+        const user= await pool.query(`SELECT * from users WHERE email = '${email}'`);     
+
+        // const response={}
+        //Checks if user exist
+        if (user.rows.length===0){
+            return res.status(401).json('Password or Email is Incorrect')
+        }
+
+        if (user.rows.length!=0){
+            const validPassword= await bcrypt.compare(password, user.rows[0].password)
+            const userDetails= await pool.query(`SELECT * from profiles WHERE id = ${user.rows[0].id}`)
+            response.name= userDetails.rows.name
+            response.email= userDetails.rows.email
+            response.level= userDetails.rows.level
+            response.contact= userDetails.rows.contact
+            response.age= userDetails.rows.age
+
+            if (!validPassword){
+                return res.status(401).json('Password or Email is incorrect')
+            }
+        }
+            res.json('login is successful');
+} catch (err){
+    console.error(err.message)
+    res.status(500).send('Login Failed')
+}})
+// ===============================================================================================================================================================================================================
 
 // ================================================================================================= STUDENTS =====================================================================================================
 //creates student

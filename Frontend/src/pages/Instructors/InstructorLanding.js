@@ -1,21 +1,22 @@
 import React from "react"
+import { Navigate } from "react-router-dom"
 import styles from './instructorlanding.module.css'
 const InstructorLanding=()=>{
     return(
     <>
 {/* Navbar */}
 <ul class="nav nav-tabs justify-content-center">
-  <li class="nav-item">
-    <a class="nav-link" aria-current="page" href="#">Active</a>
-  </li>
-  <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Dropdown</a>
+<li class="nav-item">
+    <a class="nav-link" href="#">Home</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" href="#">Link</a>
+    <a class="nav-link" href="#">About Us</a>
   </li>
   <li class="nav-item">
-  <a class="nav-link" href="#">Link</a>
+    <a class="nav-link" href="#">Term Schedule</a>
+  </li>
+  <li class="nav-item">
+  <a class="nav-link" href="#">Contact</a>
   </li>
 </ul>
 
@@ -29,7 +30,7 @@ const InstructorLanding=()=>{
       alt="kid_swimming"
       className="bg-dark"
     />
-    <p className={`text-center d-flex align-items-center justify-content-center m-0 p-4 w-100 ${styles.card}`}>
+    <p className={`text-center d-flex align-items-center justify-content-center m-0 p-4 w-100 ${styles.card}`} onClick={()=>{Navigate('/book-a-class')}}>
     Book A Class
     </p>
   </div>
@@ -50,4 +51,4 @@ const InstructorLanding=()=>{
 </>
     )
 }
-export default InstructorLandinglogin
+export default InstructorLanding
