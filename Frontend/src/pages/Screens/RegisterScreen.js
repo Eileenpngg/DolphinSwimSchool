@@ -17,8 +17,8 @@ const RegisterScreen = (props) => {
   } = useForm()
 
   const onSubmit = async (data) => {
-    const allData= await data
-    setUserDetails(allData);
+    setUserDetails(data);
+    handleRegister({data})
     navigate('/registersuccess')
   };
 
@@ -34,16 +34,17 @@ const RegisterScreen = (props) => {
 
   console.log(userDetails)
 
-  async function handleRegister(
-    url = "http://127.0.0.1:5001/api/user/create"
-  ) {
+  async function handleRegister({
+    url = "http://127.0.0.1:5001/api/user/create",
+    data
+  }) {
     const response = await fetch(url, {
       method: "POST",
       headers: {
          Accept: "application/json",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(userDetails),
+      body: JSON.stringify(data),
     });
     const jResponse = await response.json();
     console.log(jResponse);
