@@ -87,6 +87,72 @@ app.post("/api/user/login", async (req, res) => {
     res.status(500).send("Login Failed");
   }
 });
+
+// ================================================================================================= INSTRUCTORS =====================================================================================================
+
+// //gets a instructor
+// app.get("/api/instructor/:id", async (req, res) => {
+//     try {
+//       const profile = await pool.query(
+//         "SELECT * from instructors WHERE id = $1",
+//         [req.params.id]
+//       );
+//       res.json(profile.rows);
+//     } catch (err) {
+//       console.log(err.message);
+//     }
+//   });
+  
+//   //updates instructor
+//   app.patch("/api/instructor/:id", (req, res) => {
+//     try {
+//       const profile = req.body;
+//       Object.keys(profile).forEach(async (key) => {
+//         results = await pool.query(
+//           `UPDATE instructors SET ${key} = '${req.body[key]}';`
+//         );
+//       });
+//       res.json({ status: "ok", message: "profile is updated" });
+//     } catch (err) {
+//       console.log(err.message);
+//     }
+//   });
+  
+
+//Creates classes
+  app.post("/api/classes/create", async(req, res) => {
+    try {
+      const {instructor_name, level, date, session_id} = req.body;
+      const [day, month, year]= date.split('-');
+      const formattedDate= [year, month, day].join('-')
+      console.log(formattedDate)
+        const class_session_id= await pool.query(`SELECT id FROM class_session WHERE date= '${formattedDate}' AND session_id= ${session_id};`)
+        console.log(class_session_id.rows[0].id)
+        if (class_session_id?.rows?.length === 0) {
+            const newClassSess = await pool.query(`INSERT INTO class_session (date, session_id)VALUES('${formattedDate}', ${session_id});`)
+        }
+        if (class_session_id?.rows?.length !== 0) {
+            const newClass= await pool.query(`INSERT INTO classes(class_session_id, instructor_name, level) VALUES(${class_session_id.rows[0].id}, '${instructor_name}', '${level}');`)
+        }
+      res.json({ status: "ok", message: "class is created" });
+    } catch (err) {
+      console.log(err.message);
+    }
+  });
+
+//gets all sessions
+app.get("/api/sessions/get", async (req, res) => {
+    try {
+      const sessions = await pool.query("SELECT * from sessions");
+      res.json(sessions.rows);
+    } catch (err) {
+      console.log(err.message);
+    }
+  });
+
+  app.listen(5001, () => {
+    console.log("swim app is running!!");
+  });
 // ===============================================================================================================================================================================================================
 
 // ================================================================================================= STUDENTS =====================================================================================================
@@ -187,58 +253,7 @@ app.delete("/api/event/delete/:id", async (req, res) => {
 });
 // ====================================================================================================================================================================================================================
 
-//Instructor
-app.post("/api/instructor/create", async (req, res) => {
-  try {
-    const profile = req.body;
-    const newProfile = await pool.query(
-      "INSERT INTO instructors(name, age, level, contact, position, email) VALUES ($1, $2, $3, $4, $5, $6)",
-      [
-        profile.name,
-        profile.age,
-        profile.level,
-        profile.contact,
-        profile.position,
-        profile.email,
-      ]
-    );
-    res.json({ status: "ok", message: "profile is created" });
-  } catch (err) {
-    console.log(err.message);
-  }
-});
 
-//gets a instructor
-app.get("/api/instructor/:id", async (req, res) => {
-  try {
-    const profile = await pool.query(
-      "SELECT * from instructors WHERE id = $1",
-      [req.params.id]
-    );
-    res.json(profile.rows);
-  } catch (err) {
-    console.log(err.message);
-  }
-});
-
-//updates instructor
-app.patch("/api/instructor/:id", (req, res) => {
-  try {
-    const profile = req.body;
-    Object.keys(profile).forEach(async (key) => {
-      results = await pool.query(
-        `UPDATE instructors SET ${key} = '${req.body[key]}';`
-      );
-    });
-    res.json({ status: "ok", message: "profile is updated" });
-  } catch (err) {
-    console.log(err.message);
-  }
-});
-
-app.listen(5001, () => {
-  console.log("swim app is running!!");
-});
 
 // req.body = {
 //     name: 'john',

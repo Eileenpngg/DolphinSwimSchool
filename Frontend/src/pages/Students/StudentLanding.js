@@ -20,6 +20,13 @@ const StudentLanding=()=>{
   <li class="nav-item">
   <a class="nav-link" href="#">Contact</a>
   </li>
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Profile</a>
+    <ul class="dropdown-menu">
+      <li><a class="view-profile" href="=/profile">Profile</a></li>
+      <li><a class="logout" href="/">Logout</a></li>
+    </ul>
+  </li>
 </ul>
 
 {/* Content */}

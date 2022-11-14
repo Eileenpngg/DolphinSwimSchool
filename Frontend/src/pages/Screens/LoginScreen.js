@@ -1,15 +1,13 @@
 import React, { useState, useContext } from "react";
 import styles from "./login.module.css";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 import UserContext from "../../context";
 
 const LoginScreen = (props) => {
   const [loginDetails, setLoginDetails] = useState();
   const userCtx = useContext(UserContext);
-  const navigate = useNavigate();
+  
   //react-hook-forms functionality
-
   const {
     register,
     handleSubmit,
@@ -42,8 +40,7 @@ const LoginScreen = (props) => {
     } else {
       userCtx.setUserDetails({ ...jResponse });
     }
-    return jResponse;
-  }
+    return jResponse;  }
 
   return (
     <div className={`${styles.page}`}>

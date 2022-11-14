@@ -1,15 +1,19 @@
-import React,{useState} from "react";
+import React,{useState, useEffect, useContext} from "react";
 import { useNavigate } from "react-router-dom";
 import {useForm} from "react-hook-form";
+import UserContext from "../../context";
+
 const CreateAClassForm=()=>{
 
 // To Do: Connect to back end 
 // Convert time to unix before sending to backend
 //Autopoulate name, level, contact and age
 
+const userCtx= useContext(UserContext)
+
 const navigate= useNavigate();
 const [classDetails, setClassDetails]= useState()
-
+const [sessions, setSessions]=useState()
  //react-hook-forms functionality
  const {
     register,
@@ -20,24 +24,77 @@ const [classDetails, setClassDetails]= useState()
   const onSubmit = async (data) => {
     const allData= await data
     setClassDetails(allData);
-    navigate('/registersuccess')
+    navigate('/instructor')
   };
   
   const onError = (errors) => {
     console.log(errors);
   };
+
+  //To populate sessions drop down
+  async function getSessions(
+    url = "http://127.0.0.1:5001/api/sessions/get"
+  ) {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+    const jResponse = await response.json();
+    console.log(jResponse);
+    if (response.status === 401) {
+      console.log(`${jResponse.message}`);
+    } else {
+      setSessions({ ...jResponse });
+      
+    }
+    return jResponse;  }
+    
+    useEffect(()=>{
+    getSessions()
+    },[])
+    
+  // //To create a class
+  // async function createClass(
+  //   url = "http://127.0.0.1:5001/api/classes/create"
+  // ) {
+  //   const response = await fetch(url, {
+  //     method: "POST",
+  //     headers: {
+  //       "Accept": "application/json",
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify(data)
+  //   });
+  //   const jResponse = await response.json();
+  //   console.log(jResponse);
+  //   if (response.status === 401) {
+  //     console.log(`${jResponse.message}`);
+  //   } else {
+  //     setSessions({ ...jResponse });
+      
+  //   }
+  //   return jResponse;  }
+    
+    useEffect(()=>{
+    getSessions()
+    },[])
+
     return(
         <>
         <div>
               <section className="container-md" id="book_class">
                 <form onSubmit={handleSubmit(onSubmit, onError)}>
-                <h5 className="m-4"><u>Student Details</u></h5>
+                <h5 className="m-4"><u>Instructor Details</u></h5>
                 <div className="form-outline m-4 row justify-content-center">
                     <div className="col-md-4">
                       <input
                         type="name"
                         className="form-control mt-2"
-                        placeholder="Name"
+                        disabled
+                        value={userCtx.userDetails.name}
                         {...register("name", {
                           required: {
                             value: true,
@@ -52,11 +109,12 @@ const [classDetails, setClassDetails]= useState()
                       <input
                         type="age"
                         className="form-control mt-2"
-                        placeholder="Age"
-                        {...register("age", {
+                        disabled
+                        value={userCtx.userDetails.level}
+                        {...register("level", {
                           required: {
                             value: true,
-                            message: "Please enter your age"
+                            message: "Please enter your level"
                           },
                         })}
                       />
@@ -68,59 +126,6 @@ const [classDetails, setClassDetails]= useState()
                         <button className="btn btn-secondary w-100" type='cancel' onClick={()=>navigate('/student')}>Cancel</button>
                     </div>             
                   </div> 
-
-
-                    <div className="form-outline m-4 row justify-content-center">
-                    <div className="col-md-4">
-                    <select class="form-select" aria-label="Default select example" 
-                    {...register("level", {
-                        required: {
-                          value: true,
-                          message: "Please select your level"
-                        },
-                      })}>
-                        <option value=''>Level</option>
-                        <option value='T1'>T1</option>
-                        <option value ='T2'>T2</option>
-                        <option value ='T3'>T3</option>
-                        <option value ='T4'>T4</option>
-                        <option value ='L1'>L1</option>
-                        <option value ='L2'>L2</option>
-                        <option value ='L3'>L3</option>
-                        <option value ='L4'>L4</option>
-                        <option value ='L5'>L5</option>
-                        <option value ='L6'>L6</option>
-                        <option value ='L7'>L7</option>
-                        <option value ='L8'>L8</option>
-                        <option value ='I1'>I1</option>
-                        <option value ='I2'>I2</option>
-                        <option value ='I3'>I3</option>
-                        <option value ='I4'>I4</option>
-                        <option value ='I5'>I5</option>
-                        <option value ='I6'>I6</option>
-                        <option value ='I7'>I7</option>
-                        <option value ='I8'>I8</option>
-                    </select>
-                    <p className="mt-2 text-danger text-center">{errors.level?.message}</p>
-                    </div>
-
-                    <div className="col-md-4">
-                      <input
-                        type="contact"
-                        className="form-control"
-                        placeholder="Contact Number"
-                        {...register("contact", {
-                          required: {
-                            value: true,
-                            message: "Please enter your contact number"
-                          },
-                        })}
-                      />
-                      <p className="mt-2 text-danger text-center">{errors.contact?.message}</p>
-                    </div>
-                    <div className="col-md-4"></div>
-                    </div>
-
                 <h5 className="m-4"><u>Booking Details</u></h5>
                   <div className="form-outline m-4 row justify-content-center">
                     <div className="col-md-4">
@@ -137,19 +142,18 @@ const [classDetails, setClassDetails]= useState()
                       />
                     <p className="mt-2 text-danger text-center">{errors.date?.message}</p>
                     </div>
-                    {/* changes to sessions timing */}
-                    <div className="col-md-4">
-                      <input
-                        type="time"
-                        className="form-control mt-2"
-                        placeholder="Preferred Time"
-                        {...register("time", {
-                          required: {
-                            value: true,
-                            message: "Please insert your preferred time"
-                          },
-                        })}
-                      />
+                    
+                    <div className="col-md-4 mt-2">
+                    <select class="form-select" aria-label="Default select example" 
+                    {...register("time", {
+                        required: {
+                          value: true,
+                          message: "Please select your preferred time"
+                        },
+                      })}>
+                        <option value=''>Preferred Session</option>
+                        {sessions?Object.values(sessions).map((session)=> (<option value={session.id}>{session.start_time} - {session.end_time}</option>)):""}
+                    </select>
                     <p className="mt-2 text-danger text-center">{errors.time?.message}</p>
                     </div>
                     <div className="col-md-1"></div>

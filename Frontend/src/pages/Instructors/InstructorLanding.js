@@ -1,6 +1,7 @@
 import React from "react"
 import { useNavigate } from "react-router-dom"
 import styles from './instructorlanding.module.css'
+
 const InstructorLanding=()=>{
 const navigate= useNavigate();
 
@@ -20,7 +21,15 @@ const navigate= useNavigate();
   <li class="nav-item">
   <a class="nav-link" href="#">Apply For Leave</a>
   </li>
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Profile</a>
+    <ul class="dropdown-menu">
+      <li><a class="view-profile" href="=/profile">Profile</a></li>
+      <li><a class="logout" href="/">Logout</a></li>
+    </ul>
+  </li>
 </ul>
+
 
 {/* Content */}
 <div className="my-5">

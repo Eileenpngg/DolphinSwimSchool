@@ -15,7 +15,7 @@ function App() {
   const [userDetails, setUserDetails] = useState({});
 
   function displayLandingPage() {
-  console.log(userDetails.is_instructor)
+
   switch (userDetails.is_instructor) {
     case true:
       return (
@@ -55,6 +55,7 @@ const landingPage = displayLandingPage();
 <UserContext.Provider value={{ userDetails, setUserDetails }}>
 <Routes>
 <Route path="/" element={landingPage} />
+<Route path="/login" element={<LoginScreen/>} />
 <Route path="/register" element={<RegisterScreen/>} />
 <Route path="/registersuccess" element={<RegisterSuccess/>} />
 <Route path="/instructor" element={<InstructorLanding />} />
