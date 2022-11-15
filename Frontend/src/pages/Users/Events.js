@@ -77,6 +77,10 @@ return(
     {userctx.userDetails.is_instructor?<button className="btn btn-secondary w-25 mt-4" type='submit' onClick={()=> navigate('/edit-event')}>Delete events</button>:" "}
     </div>
 </div>
+<div className="row justify-content-center align-items-end mb-4">
+{userctx.userDetails.is_instructor?<button className="btn btn-info w-25 mt-4 text-center" type='submit' onClick={()=> navigate('/event-form')}>Add New Event</button>:" "}
+</div>
+
 </>
 )
 }

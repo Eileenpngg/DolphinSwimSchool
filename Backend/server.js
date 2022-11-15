@@ -122,28 +122,34 @@ app.post("/api/user/login", async (req, res) => {
 app.post("/api/classes/create", async (req, res) => {
   try {
     const { name, level, date, time } = req.body;
-    console.log(date)
+    console.log(date);
 
     const class_session_id = await pool.query(
       `SELECT id FROM class_session WHERE date= '${date}' AND session_id= ${time};`
     );
-    console.log(class_session_id.rows)
-    
+    console.log(class_session_id.rows);
+
     if (class_session_id?.rows?.length === 0) {
-        const newClassSess = await pool.query(`INSERT INTO class_session (date, session_id)VALUES('${date}', ${time});`);
-        const newClassSessid= await pool.query(`SELECT id FROM class_session WHERE date= '${date}' AND session_id= ${time};`)
-        console.log(newClassSessid.rows[0].id)
-        const newClass= await pool.query(`INSERT INTO classes(class_session_id, instructor_name, level) VALUES(${newClassSessid.rows[0].id}, '${name}', '${level}');`)
+      const newClassSess = await pool.query(
+        `INSERT INTO class_session (date, session_id)VALUES('${date}', ${time});`
+      );
+      const newClassSessid = await pool.query(
+        `SELECT id FROM class_session WHERE date= '${date}' AND session_id= ${time};`
+      );
+      console.log(newClassSessid.rows[0].id);
+      const newClass = await pool.query(
+        `INSERT INTO classes(class_session_id, instructor_name, level) VALUES(${newClassSessid.rows[0].id}, '${name}', '${level}');`
+      );
     }
     if (class_session_id?.rows?.length !== 0) {
       const newClass = await pool.query(
         `INSERT INTO classes(class_session_id, instructor_name, level) VALUES(${class_session_id.rows[0].id}, '${name}', '${level}');`
       );
-      
     }
     res.json({ status: "ok", message: "class is created" });
   } catch (err) {
     console.log(err.message);
+    res.status(500);
   }
 });
 
@@ -154,6 +160,7 @@ app.get("/api/sessions/get", async (req, res) => {
     res.json(sessions.rows);
   } catch (err) {
     console.log(err.message);
+    res.status(500);
   }
 });
 
@@ -202,18 +209,45 @@ app.get("/api/sessions/get", async (req, res) => {
 app.put("/api/classes/get", async (req, res) => {
   try {
     const { level, date } = req.body;
-    // const [day, month, year] = date.split("-");
-    // const formattedDate = [year, month, day].join("-");
-    const classDetails = await pool.query(`SELECT * FROM classes 
-        LEFT OUTER JOIN class_session 
-        ON class_session.date= '${date}' AND classes.level ='${level}' AND class_session.id = classes.class_session_id 
-            JOIN sessions ON sessions.id=class_session.session_id;`);
-    res.json(classDetails.rows[0]);
+    const classDetails = await pool.query(`SELECT * FROM classes
+        JOIN class_session 
+        ON class_session.id = classes.class_session_id 
+            JOIN sessions ON sessions.id=class_session.session_id
+            WHERE level = '${level}' AND date = '${date}';`);
+    res.json(classDetails.rows);
   } catch (err) {
     console.log(err.message);
+    res.status(500);
   }
 });
 
+//get instructos
+app.put("/api/instructors/get", async (req, res) => {
+  try {
+    const { level, date, time } = req.body;
+    console.log(level);
+    const classDetails = await pool.query(`SELECT * FROM classes
+          JOIN class_session 
+          ON class_session.id = classes.class_session_id 
+              JOIN sessions ON sessions.id=class_session.session_id
+              WHERE level = '${level}' AND date = '${date}' AND session_id=${time};`);
+    res.json(classDetails.rows);
+  } catch (err) {
+    console.log(err.message);
+    res.status(500);
+  }
+});
+
+//book class
+// app.post("/api/classes/book", async (req, res) => {
+//     try {
+//       const { name, age, contact, level, time, date } = req.body;
+//       const classDetails = await pool.query(Insert into );
+//       res.json(classDetails.rows);
+//     } catch (err) {
+//       console.log(err.message);
+//     }
+//   })
 // ====================================================================================================================================================================================================================
 
 // ================================================================================================= EVENTS =====================================================================================================
@@ -287,5 +321,3 @@ app.put("/api/classes/get", async (req, res) => {
 app.listen(5001, () => {
   console.log("swim app is running!!");
 });
-
-

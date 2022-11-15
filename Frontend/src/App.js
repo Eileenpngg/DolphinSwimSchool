@@ -9,6 +9,7 @@ import StudentLanding from "./pages/Students/StudentLanding";
 import BookClassForm from "./pages/Students/BookClassForm";
 import PackageForm from "./pages/Students/PackageForm";
 import Events from "./pages/Users/Events";
+import EventForm from "./pages/Instructors/EventForm";
 import CreateAClassForm from "./pages/Instructors/CreateAClassForm";
 import ClassSchedule from "./pages/Instructors/ClassSchedule";
 function App() {
@@ -63,8 +64,10 @@ const landingPage = displayLandingPage();
 <Route path="/book-a-class" element={<BookClassForm />} />
 <Route path="/package-form" element={<PackageForm />} />
 <Route path="/events" element={<Events />} />
+<Route path="/event-form" element={<EventForm/>} />
 <Route path="/create-a-class" element={<CreateAClassForm />} />
 <Route path="/class-schedule" element={<ClassSchedule/>} />
+
 </Routes>
 </UserContext.Provider>
 
