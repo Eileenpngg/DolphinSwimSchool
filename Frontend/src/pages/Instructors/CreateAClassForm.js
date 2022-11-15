@@ -22,8 +22,8 @@ const [sessions, setSessions]=useState()
   } = useForm()
 
   const onSubmit = async (data) => {
-    const allData= await data
-    setClassDetails(allData);
+    createClass({data})
+    console.log(data)
     navigate('/instructor')
   };
   
@@ -56,27 +56,28 @@ const [sessions, setSessions]=useState()
     getSessions()
     },[])
     
-  // //To create a class
-  // async function createClass(
-  //   url = "http://127.0.0.1:5001/api/classes/create"
-  // ) {
-  //   const response = await fetch(url, {
-  //     method: "POST",
-  //     headers: {
-  //       "Accept": "application/json",
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify(data)
-  //   });
-  //   const jResponse = await response.json();
-  //   console.log(jResponse);
-  //   if (response.status === 401) {
-  //     console.log(`${jResponse.message}`);
-  //   } else {
-  //     setSessions({ ...jResponse });
+  //To create a class
+  async function createClass({
+    url = "http://127.0.0.1:5001/api/classes/create", 
+    data
+  }) {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data)
+    });
+    const jResponse = await response.json();
+    console.log(jResponse);
+    if (response.status === 401) {
+      console.log(`${jResponse.message}`);
+    } else {
+      setSessions({ ...jResponse });
       
-  //   }
-  //   return jResponse;  }
+    }
+    return jResponse;  }
     
     useEffect(()=>{
     getSessions()
@@ -93,12 +94,11 @@ const [sessions, setSessions]=useState()
                       <input
                         type="name"
                         className="form-control mt-2"
-                        disabled
-                        value={userCtx.userDetails.name}
+                        defaultValue={userCtx.userDetails.name}
                         {...register("name", {
                           required: {
                             value: true,
-                            message: "Please enter your name"
+                            message: "Please enter your level"
                           },
                         })}
                       />
@@ -109,8 +109,7 @@ const [sessions, setSessions]=useState()
                       <input
                         type="age"
                         className="form-control mt-2"
-                        disabled
-                        value={userCtx.userDetails.level}
+                        defaultValue={userCtx.userDetails.level}
                         {...register("level", {
                           required: {
                             value: true,
@@ -126,7 +125,7 @@ const [sessions, setSessions]=useState()
                         <button className="btn btn-secondary w-100" type='cancel' onClick={()=>navigate('/student')}>Cancel</button>
                     </div>             
                   </div> 
-                <h5 className="m-4"><u>Booking Details</u></h5>
+                <h5 className="m-4"><u>Class Details</u></h5>
                   <div className="form-outline m-4 row justify-content-center">
                     <div className="col-md-4">
                       <input

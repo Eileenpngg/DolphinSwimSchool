@@ -102,7 +102,7 @@ app.post("/api/user/login", async (req, res) => {
 //       console.log(err.message);
 //     }
 //   });
-  
+
 //   //updates instructor
 //   app.patch("/api/instructor/:id", (req, res) => {
 //     try {
@@ -117,78 +117,99 @@ app.post("/api/user/login", async (req, res) => {
 //       console.log(err.message);
 //     }
 //   });
-  
 
 //Creates classes
-  app.post("/api/classes/create", async(req, res) => {
-    try {
-      const {instructor_name, level, date, session_id} = req.body;
-      const [day, month, year]= date.split('-');
-      const formattedDate= [year, month, day].join('-')
-      console.log(formattedDate)
-        const class_session_id= await pool.query(`SELECT id FROM class_session WHERE date= '${formattedDate}' AND session_id= ${session_id};`)
-        console.log(class_session_id.rows[0].id)
-        if (class_session_id?.rows?.length === 0) {
-            const newClassSess = await pool.query(`INSERT INTO class_session (date, session_id)VALUES('${formattedDate}', ${session_id});`)
-        }
-        if (class_session_id?.rows?.length !== 0) {
-            const newClass= await pool.query(`INSERT INTO classes(class_session_id, instructor_name, level) VALUES(${class_session_id.rows[0].id}, '${instructor_name}', '${level}');`)
-        }
-      res.json({ status: "ok", message: "class is created" });
-    } catch (err) {
-      console.log(err.message);
+app.post("/api/classes/create", async (req, res) => {
+  try {
+    const { name, level, date, time } = req.body;
+    console.log(date)
+
+    const class_session_id = await pool.query(
+      `SELECT id FROM class_session WHERE date= '${date}' AND session_id= ${time};`
+    );
+    console.log(class_session_id.rows)
+    
+    if (class_session_id?.rows?.length === 0) {
+        const newClassSess = await pool.query(`INSERT INTO class_session (date, session_id)VALUES('${date}', ${time});`);
+        const newClassSessid= await pool.query(`SELECT id FROM class_session WHERE date= '${date}' AND session_id= ${time};`)
+        console.log(newClassSessid.rows[0].id)
+        const newClass= await pool.query(`INSERT INTO classes(class_session_id, instructor_name, level) VALUES(${newClassSessid.rows[0].id}, '${name}', '${level}');`)
     }
-  });
+    if (class_session_id?.rows?.length !== 0) {
+      const newClass = await pool.query(
+        `INSERT INTO classes(class_session_id, instructor_name, level) VALUES(${class_session_id.rows[0].id}, '${name}', '${level}');`
+      );
+      
+    }
+    res.json({ status: "ok", message: "class is created" });
+  } catch (err) {
+    console.log(err.message);
+  }
+});
 
 //gets all sessions
 app.get("/api/sessions/get", async (req, res) => {
-    try {
-      const sessions = await pool.query("SELECT * from sessions");
-      res.json(sessions.rows);
-    } catch (err) {
-      console.log(err.message);
-    }
-  });
+  try {
+    const sessions = await pool.query("SELECT * from sessions");
+    res.json(sessions.rows);
+  } catch (err) {
+    console.log(err.message);
+  }
+});
 
-  app.listen(5001, () => {
-    console.log("swim app is running!!");
-  });
 // ===============================================================================================================================================================================================================
 
 // ================================================================================================= STUDENTS =====================================================================================================
 
-//gets all students
-app.get("/api/students/getall", async (req, res) => {
-  try {
-    const profile = await pool.query("SELECT * from students");
-    res.json(profile.rows);
-  } catch (err) {
-    console.log(err.message);
-  }
-});
+// //gets all students
+// app.get("/api/students/getall", async (req, res) => {
+//   try {
+//     const profile = await pool.query("SELECT * from students");
+//     res.json(profile.rows);
+//   } catch (err) {
+//     console.log(err.message);
+//   }
+// });
 
-//gets a student
-app.get("/api/student/:id", async (req, res) => {
-  try {
-    const profile = await pool.query("SELECT * from students WHERE id = $1", [
-      req.params.id,
-    ]);
-    res.json(profile.rows);
-  } catch (err) {
-    console.log(err.message);
-  }
-});
+// //gets a student
+// app.get("/api/student/:id", async (req, res) => {
+//   try {
+//     const profile = await pool.query("SELECT * from students WHERE id = $1", [
+//       req.params.id,
+//     ]);
+//     res.json(profile.rows);
+//   } catch (err) {
+//     console.log(err.message);
+//   }
+// });
 
-//update a student
-app.patch("/api/student/:id", (req, res) => {
+// //update a student
+// app.patch("/api/student/:id", (req, res) => {
+//   try {
+//     const profile = req.body;
+//     Object.keys(profile).forEach(async (key) => {
+//       results = await pool.query(
+//         `UPDATE students SET ${key} = '${req.body[key]}';`
+//       );
+//     });
+//     res.json({ status: "ok", message: "profile is updated" });
+//   } catch (err) {
+//     console.log(err.message);
+//   }
+// });
+
+// get classes available with student level
+app.put("/api/classes/get", async (req, res) => {
   try {
-    const profile = req.body;
-    Object.keys(profile).forEach(async (key) => {
-      results = await pool.query(
-        `UPDATE students SET ${key} = '${req.body[key]}';`
-      );
-    });
-    res.json({ status: "ok", message: "profile is updated" });
+    const { level, date } = req.body;
+    // const [day, month, year] = date.split("-");
+    // const formattedDate = [year, month, day].join("-");
+    console.log(date)
+    const classDetails = await pool.query(`SELECT * FROM classes 
+        LEFT OUTER JOIN class_session 
+        ON class_session.date= '${date}' AND classes.level ='${level}' AND class_session.id = classes.class_session_id 
+            JOIN sessions ON sessions.id=class_session.session_id;`);
+    res.json(classDetails.rows[0]);
   } catch (err) {
     console.log(err.message);
   }
@@ -253,8 +274,6 @@ app.delete("/api/event/delete/:id", async (req, res) => {
 });
 // ====================================================================================================================================================================================================================
 
-
-
 // req.body = {
 //     name: 'john',
 //     age: 12,
@@ -265,3 +284,7 @@ app.delete("/api/event/delete/:id", async (req, res) => {
 //     let query = `UPDATE students SET $1 = $2`
 //     let results = pool.query(query, [key, req.body[key]])
 // })
+
+app.listen(5001, () => {
+  console.log("swim app is running!!");
+});
