@@ -54,9 +54,10 @@ const BookClassForm = () => {
     getClasses({ level, date });
   }, [date, level, userCtx.userDetails.level]);
 
-  console.log(classes);
+
   if (classes){
       Object.values(classes).map((aClass)=> console.log(aClass))
+      console.log(classes);
   }
 
 
