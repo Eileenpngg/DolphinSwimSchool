@@ -94,9 +94,8 @@ app.post("/api/user/login", async (req, res) => {
 // app.get("/api/instructor/:id", async (req, res) => {
 //     try {
 //       const profile = await pool.query(
-//         "SELECT * from instructors WHERE id = $1",
-//         [req.params.id]
-//       );
+//         `SELECT * from instructors WHERE id = ${id}`
+        // );
 //       res.json(profile.rows);
 //     } catch (err) {
 //       console.log(err.message);
@@ -238,16 +237,18 @@ app.put("/api/instructors/get", async (req, res) => {
   }
 });
 
-//book class
-// app.post("/api/classes/book", async (req, res) => {
-//     try {
-//       const { name, age, contact, level, time, date } = req.body;
-//       const classDetails = await pool.query(Insert into );
-//       res.json(classDetails.rows);
-//     } catch (err) {
-//       console.log(err.message);
-//     }
-//   })
+// book class
+app.post("/api/class/book", async (req, res) => {
+    try {
+      const {class_id, user_id} = req.body;
+      console.log(class_id)
+      const classDetails = await pool.query(`INSERT into class_user(class_id, user_id) VALUES(${class_id}, ${user_id})`);
+      res.json(classDetails.rows);
+    } catch (err) {
+      console.log(err.message);
+      res.status(500);
+    }
+  })
 // ====================================================================================================================================================================================================================
 
 // ================================================================================================= EVENTS =====================================================================================================

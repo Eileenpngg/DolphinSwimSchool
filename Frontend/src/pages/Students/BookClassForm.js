@@ -6,7 +6,6 @@ const BookClassForm = () => {
   // To Do: Connect to back end
   const userCtx = useContext(UserContext);
   const navigate = useNavigate();
-  const [bookingDetails, setBookingDetails] = useState();
   const [classes, setClasses] = useState();
   const [level, setLevel] = useState();
   const [date, setDate] = useState();
@@ -22,7 +21,7 @@ const BookClassForm = () => {
   } = useForm();
 
   const onSubmit = async (data) => {
-    setBookingDetails(data);
+    bookClass()
     console.log(data);
     navigate("/registersuccess");
   };
@@ -30,6 +29,9 @@ const BookClassForm = () => {
   const onError = (errors) => {
     console.log(errors);
   };
+
+
+
   //Populates the classes available when date is selected
   async function getClasses({
     url = "http://127.0.0.1:5001/api/classes/get",
@@ -79,33 +81,11 @@ const BookClassForm = () => {
   }
 
   //Submits form and populates data
-  async function getClasses({
-    url = "http://127.0.0.1:5001/api/classes/get",
-    level,
-    date,
-  }) {
-    const response = await fetch(url, {
-      method: "PUT",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ level, date }),
-    });
-    const jResponse = await response.json();
-    if (response.status === 401) {
-      console.log(`${jResponse.message}`);
-    } else {
-      setClasses({ ...jResponse });
-    }
-    return jResponse;
-  }
-
-  //To submit booking
-  async function bookClass({
-    url = "http://127.0.0.1:5001/api/classes/create", 
-    data
-  }) {
+  async function bookClass(
+    url = "http://127.0.0.1:5001/api/class/book", 
+    data= {class_id: instructor[0].class_session_id ,user_id: userCtx.userDetails.id}
+  ) {
+    console.log(url)
     const response = await fetch(url, {
       method: "POST",
       headers: {
@@ -119,11 +99,12 @@ const BookClassForm = () => {
     if (response.status === 401) {
       console.log(`${jResponse.message}`);
     } else {
-      setSessions({ ...jResponse });
-      
+      console.log({ ...jResponse });
     }
-    return jResponse;  }
+    return jResponse;  
+  }
 
+  //Use Effects
   useEffect(() => {
     if (date !== undefined) {
       getClasses({ level: userCtx.userDetails.level, date });
@@ -322,7 +303,7 @@ const BookClassForm = () => {
                 type="instructor_name"
                 className="form-control"
                 placeholder="Instructor Name"
-                value={instructor_name}
+                defaultValue={instructor_name}
                 {...register("instructor_name", {
                   required: {
                     value: true,
