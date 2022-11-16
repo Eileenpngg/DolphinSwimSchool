@@ -83,8 +83,11 @@ const BookClassForm = () => {
   //Submits form and populates data
   async function bookClass(
     url = "http://127.0.0.1:5001/api/class/book", 
-    data= {class_id: instructor[0].class_session_id ,user_id: userCtx.userDetails.id}
-  ) {
+    data= {user_id: userCtx.userDetails.id,
+      level: userCtx.userDetails.level,
+      date,
+      time,}) 
+      {
     console.log(url)
     const response = await fetch(url, {
       method: "POST",

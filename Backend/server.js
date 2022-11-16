@@ -240,10 +240,14 @@ app.put("/api/instructors/get", async (req, res) => {
 // book class
 app.post("/api/class/book", async (req, res) => {
     try {
-      const {class_id, user_id} = req.body;
-      console.log(class_id)
-      const classDetails = await pool.query(`INSERT into class_user(class_id, user_id) VALUES(${class_id}, ${user_id})`);
-      res.json(classDetails.rows);
+      const {user_id, level, date, time} = req.body;
+      const class_id= await pool.query(`SELECT classes.id FROM classes JOIN class_session 
+      ON class_session.id = classes.class_session_id 
+          LEFT OUTER JOIN sessions ON sessions.id=class_session.session_id
+          WHERE level = '${level}' AND date = '${date}' AND session_id=${time};`);
+
+      const classDetails = await pool.query(`INSERT into class_user(class_id, user_id) VALUES(${class_id.rows[0].id}, ${user_id})`);
+      res.json(classDetails);
     } catch (err) {
       console.log(err.message);
       res.status(500);
