@@ -256,25 +256,20 @@ app.post("/api/class/book", async (req, res) => {
 // ====================================================================================================================================================================================================================
 
 // ================================================================================================= EVENTS =====================================================================================================
-//create an event
-// app.post("/api/events/create", async (req, res) => {
-//   try {
-//     const event = req.body;
-//     const newEvent = await pool.query(
-//       "INSERT INTO events(image, title, description, start_date, end_date) VALUES ($1, $2, $3, $4, $5)",
-//       [
-//         event.image,
-//         event.title,
-//         event.description,
-//         event.start_date,
-//         event.end_date,
-//       ]
-//     );
-//     res.json({ status: "ok", message: "event is created" });
-//   } catch (err) {
-//     console.log(err.message);
-//   }
-// });
+// create an event
+app.post("/api/event/create", async (req, res) => {
+  try {
+    const {image, description, start_date, end_date, start_time, end_time} = req.body;
+    console.log(req.body)
+    const newEvent = await pool.query(
+      `INSERT INTO events(image, description, start_date, end_date, start_time, end_time) VALUES ('${image}', '${description}', '${start_date}', '${end_date}', '${start_time}', '${end_time}');`
+    );
+    res.json({ status: "ok", message: "event is created" });
+  } catch (err) {
+    console.log(err.message);
+    res.status(500);
+  }
+});
 
 // //gets all events
 // app.get("/api/events/get", async (req, res) => {
