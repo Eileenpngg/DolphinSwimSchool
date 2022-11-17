@@ -7,7 +7,6 @@ const BookClassForm = () => {
   const userCtx = useContext(UserContext);
   const navigate = useNavigate();
   const [classes, setClasses] = useState();
-  const [level, setLevel] = useState();
   const [date, setDate] = useState();
   const [instructor, setInstructor] = useState();
   const [instructor_name, setInstructorName] = useState("");
@@ -23,7 +22,7 @@ const BookClassForm = () => {
   const onSubmit = async (data) => {
     bookClass()
     console.log(data);
-    navigate("/registersuccess");
+    navigate("/book-class-success");
   };
 
   const onError = (errors) => {
@@ -307,15 +306,9 @@ const BookClassForm = () => {
                 className="form-control"
                 placeholder="Instructor Name"
                 defaultValue={instructor_name}
-                {...register("instructor_name", {
-                  required: {
-                    value: true,
-                    message: "Please insert instructor name",
-                  },
-                })}
+                {...register("instructor_name")}
               />
               <p className="mt-2 text-danger text-center">
-                {errors.instructor_name?.message}
               </p>
             </div>
           </div>

@@ -9,16 +9,23 @@ const Events = () => {
   const [events, setEvents] = useState();
   const [eventId, setEventId] = useState();
   const [selected, setSelected] = useState(0);
-  console.log(events);
-
+  const [deleteId, setDeleteId] = useState();
   const userCtx = useContext(UserContext);
+
   const handleSignUp = (e) => {
     setEventId(e.target.key);
-    console.log(eventId);
     setSelected(e.target.value);
     const data = { user_id: userCtx.userDetails.id, event_id: e.target.value };
     eventSignUp({ data });
   };
+
+  const handleDelete = async (e) => {
+    console.log(e.target.value)
+    await setDeleteId(e.target.value)
+    await deleteEvent()
+    getEvents()
+  }
+
 
   //Gets list of events
   async function getEvents(url = "http://127.0.0.1:5001/api/events/get") {
@@ -62,9 +69,31 @@ const Events = () => {
     return jResponse;
   }
 
+  //Delete Event
+  async function deleteEvent(
+    url = `http://127.0.0.1:5001/api/event/${deleteId}`,
+  ) {
+    console.log(url)
+    const response = await fetch(url, {
+      method: "DELETE",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+    const jResponse = await response.json();
+    console.log(jResponse);
+    if (response.status === 401) {
+      console.log(`${jResponse.message}`);
+    } else {
+      console.log({ ...jResponse });
+    }
+    return jResponse;
+  }
+
   useEffect(() => {
     getEvents();
-  }, []);
+  },[]);
 
   return (
     <>
@@ -94,7 +123,7 @@ const Events = () => {
                 <p className={`text-start d-flex m-0`}>{event.description}</p>
               </div>
               <div className="col-3 d-flex flex-column h-100">
-                {userctx.userDetails.is_instructor ? <EditEventForm event={event} event_id={event.id} image={event.image} title={event.title} start_date={event.start_date} end_date={event.end_date} start_time={event.start_time} end_time={event.end_time} description={event.description}/> : " "}
+                {userctx.userDetails.is_instructor ? <EditEventForm event={event}/> : " "}
                 {userctx.userDetails.is_instructor ? (
                   <button
                     value={event.id}
@@ -125,9 +154,9 @@ const Events = () => {
                     value={event.id}
                     className="btn btn-secondary w-25 mt-4"
                     type="submit"
-                    onClick={() => navigate("/edit-event")}
+                    onClick={(e)=>handleDelete(e)}
                   >
-                    Delete events
+                    Delete event
                   </button>
                 ) : (
                   " "

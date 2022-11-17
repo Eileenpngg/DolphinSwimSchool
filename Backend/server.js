@@ -164,34 +164,40 @@ app.get("/api/sessions/get", async (req, res) => {
 });
 
 //gets schedule
-app.post("/api/schedule/get", async (req, res) => {
+app.put("/api/schedule/get", async (req, res) => {
     try {
-      const {date, instructor_name} = req.body;
+      const {date, session_id, instructor_name} = req.body;
       console.log(date);
       console.log(instructor_name);
-      const class_session_id = await pool.query(
-        `SELECT * FROM class_session WHERE date= '${date}' AND session_id= ${time};`
-      );
-      console.log(class_session_id.rows);
+      console.log(session_id);
+      
+      const classes = await pool.query(
+        `SELECT * FROM class_session 
+        JOIN classes ON classes.class_session_id= class_session.id 
+        JOIN class_user ON class_user.class_id= classes.id 
+        JOIN profiles on class_user.user_id= profiles.id 
+        WHERE date= '${date}' AND session_id=${session_id} AND instructor_name='${instructor_name}';`);
+
+        console.log(classes.rows);
   
-      if (class_session_id?.rows?.length === 0) {
-        const newClassSess = await pool.query(
-          `INSERT INTO class_session (date, session_id)VALUES('${date}', ${time});`
-        );
-        const newClassSessid = await pool.query(
-          `SELECT id FROM class_session WHERE date= '${date}' AND session_id= ${time};`
-        );
-        console.log(newClassSessid.rows[0].id);
-        const newClass = await pool.query(
-          `INSERT INTO classes(class_session_id, instructor_name, level) VALUES(${newClassSessid.rows[0].id}, '${name}', '${level}');`
-        );
-      }
-      if (class_session_id?.rows?.length !== 0) {
-        const newClass = await pool.query(
-          `INSERT INTO classes(class_session_id, instructor_name, level) VALUES(${class_session_id.rows[0].id}, '${name}', '${level}');`
-        );
-      }
-      res.json({ status: "ok", message: "class is created" });
+    //   if (class_session_id?.rows?.length === 0) {
+    //     const newClassSess = await pool.query(
+    //       `INSERT INTO class_session (date, session_id)VALUES('${date}', ${time});`
+    //     );
+    //     const newClassSessid = await pool.query(
+    //       `SELECT id FROM class_session WHERE date= '${date}' AND session_id= ${time};`
+    //     );
+    //     console.log(newClassSessid.rows[0].id);
+    //     const newClass = await pool.query(
+    //       `INSERT INTO classes(class_session_id, instructor_name, level) VALUES(${newClassSessid.rows[0].id}, '${name}', '${level}');`
+    //     );
+    //   }
+    //   if (class_session_id?.rows?.length !== 0) {
+    //     const newClass = await pool.query(
+    //       `INSERT INTO classes(class_session_id, instructor_name, level) VALUES(${class_session_id.rows[0].id}, '${name}', '${level}');`
+    //     );
+    //   }
+      res.json(classes.rows);
     } catch (err) {
       console.log(err.message);
       res.status(500);
@@ -301,11 +307,11 @@ app.post("/api/event/signup", async (req, res) => {
 // create an event
 app.post("/api/event/create", async (req, res) => {
   try {
-    const { image, description, start_date, end_date, start_time, end_time } =
+    const { title, image, description, start_date, end_date, start_time, end_time } =
       req.body;
     console.log(req.body);
     const newEvent = await pool.query(
-      `INSERT INTO events(image, description, start_date, end_date, start_time, end_time) VALUES ('${image}', '${description}', '${start_date}', '${end_date}', '${start_time}', '${end_time}');`
+      `INSERT INTO events(title, image, description, start_date, end_date, start_time, end_time) VALUES ('${title}','${image}', '${description}', '${start_date}', '${end_date}', '${start_time}', '${end_time}');`
     );
     res.json({ status: "ok", message: "event is created" });
   } catch (err) {
@@ -330,10 +336,10 @@ app.get("/api/events/get", async (req, res) => {
 //update a event
 app.patch("/api/events/:id", async (req, res) => {
   try {
-    const { image, description, start_date, end_date, start_time, end_time } =
+    const { title, image, description, start_date, end_date, start_time, end_time } =
       req.body;
     const updatedEvent = await pool.query(
-      `UPDATE events(image, description, start_date, end_date, start_time, end_time) VALUES ('${image}', '${description}', '${start_date}', '${end_date}', '${start_time}', '${end_time} WHERE id= ${req.params.id}');`
+      `UPDATE events SET title='${title}', image= '${image}', description= '${description}', start_date='${start_date}', end_date='${end_date}', start_time= '${start_time}', end_time='${end_time}' WHERE id= ${req.params.id};`
     );
     res.json({ status: "ok", message: "event is updated" });
   } catch (err) {
@@ -355,11 +361,17 @@ app.get("/api/event/:id", async (req, res) => {
   }
 });
 
-app.delete("/api/event/delete/:id", async (req, res) => {
-  try {
-    const events = await pool.query(
-      `DELETE from events WHERE id= ${req.params.id}`
+//delete an event
+app.delete("/api/event/:id", async (req, res) => {
+    try {
+        const id = req.params.id
+        const deleteEventUser = await pool.query(
+            `DELETE from event_user WHERE event_id= ${id}`
+        );
+        const deleteEvent = await pool.query(
+        `DELETE from events WHERE id= ${id}`
     );
+  
     res.json({ status: "ok", message: "event deleted" });
   } catch (err) {
     console.log(err.message);

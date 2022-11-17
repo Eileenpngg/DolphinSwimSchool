@@ -98,7 +98,7 @@ const [sessions, setSessions]=useState()
                         {...register("name", {
                           required: {
                             value: true,
-                            message: "Please enter your level"
+                            message: "Please enter your name"
                           },
                         })}
                       />
@@ -107,7 +107,7 @@ const [sessions, setSessions]=useState()
 
                     <div className="col-md-4">
                       <input
-                        type="age"
+                        type="level"
                         className="form-control mt-2"
                         defaultValue={userCtx.userDetails.level}
                         {...register("level", {
@@ -117,11 +117,11 @@ const [sessions, setSessions]=useState()
                           },
                         })}
                       />
-                          <p className="text-danger text-center mt-2">{errors.age?.message}</p>
+                          <p className="text-danger text-center mt-2">{errors.level?.message}</p>
                     </div>
                     <div className="col-md-2"></div>
                     <div className="col-md-2 flex-column">
-                        <button className="btn btn-secondary w-100 mb-4" type='submit'>Register</button>
+                        <button className="btn btn-secondary w-100 mb-4" type='submit'>Add Class</button>
                         <button className="btn btn-secondary w-100" type='cancel' onClick={()=>navigate('/student')}>Cancel</button>
                     </div>             
                   </div> 

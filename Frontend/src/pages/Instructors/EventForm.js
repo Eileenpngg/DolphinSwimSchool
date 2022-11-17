@@ -18,7 +18,7 @@ const EventForm=()=>{
       const onSubmit = async (data) => {
         console.log(data)
         createEvent({data})
-        navigate('/registersuccess')
+        navigate('/create-event-success')
       };
       
       const onError = (errors) => {
@@ -79,7 +79,7 @@ const EventForm=()=>{
                             <button className="btn btn-secondary w-100" type='cancel' onClick={()=>navigate('/instructor')}>Cancel</button>
                         </div>             
                       </div> 
-                      <h5 className="m-4"><u>Booking Details</u></h5>
+                      <h5 className="m-4"><u>Event Details</u></h5>
                         <div className="form-outline m-4 row justify-content-start">
                         <div className="col-md-4">
                           <textarea
@@ -95,7 +95,20 @@ const EventForm=()=>{
                           />
                           <p className="mt-2 text-danger text-center">{errors.description?.message}</p>
                         </div>
-                        <div className="col-md-4"></div>
+                        <div className="col-md-4 text-end">
+                          <input
+                            type="title"
+                            className="form-control"
+                            placeholder="Event Title"
+                            {...register("title", {
+                              required: {
+                                value: true,
+                                message: "Please enter event title"
+                              },
+                            })}
+                          />
+                          <p className="mt-2 text-danger text-center">{errors.title?.message}</p>
+                        </div>
                         </div>
 
                       <div className="form-outline m-4 row justify-content-start">

@@ -12,6 +12,9 @@ import Events from "./pages/Users/Events";
 import EventForm from "./pages/Instructors/EventForm";
 import CreateAClassForm from "./pages/Instructors/CreateAClassForm";
 import ClassSchedule from "./pages/Instructors/ClassSchedule";
+import CreateEventSuccess from "./pages/Screens/CreateEventSuccess";
+import BookClassSuccess from "./pages/Screens/BookClassSuccess";
+
 function App() {
   const [userDetails, setUserDetails] = useState({});
 
@@ -67,7 +70,8 @@ const landingPage = displayLandingPage();
 <Route path="/event-form" element={<EventForm/>} />
 <Route path="/create-a-class" element={<CreateAClassForm />} />
 <Route path="/class-schedule" element={<ClassSchedule/>} />
-
+<Route path="/create-event-success" element={<CreateEventSuccess/>} />
+<Route path="/book-class-success" element={<BookClassSuccess/>} />
 </Routes>
 </UserContext.Provider>
 
