@@ -90,12 +90,12 @@ app.post("/api/user/login", async (req, res) => {
 
 // ================================================================================================= INSTRUCTORS =====================================================================================================
 
-// //gets a instructor
+// //gets a instructor profile
 // app.get("/api/instructor/:id", async (req, res) => {
 //     try {
 //       const profile = await pool.query(
 //         `SELECT * from instructors WHERE id = ${id}`
-        // );
+// );
 //       res.json(profile.rows);
 //     } catch (err) {
 //       console.log(err.message);
@@ -163,21 +163,46 @@ app.get("/api/sessions/get", async (req, res) => {
   }
 });
 
+//gets schedule
+app.post("/api/schedule/get", async (req, res) => {
+    try {
+      const {date, instructor_name} = req.body;
+      console.log(date);
+      console.log(instructor_name);
+      const class_session_id = await pool.query(
+        `SELECT * FROM class_session WHERE date= '${date}' AND session_id= ${time};`
+      );
+      console.log(class_session_id.rows);
+  
+      if (class_session_id?.rows?.length === 0) {
+        const newClassSess = await pool.query(
+          `INSERT INTO class_session (date, session_id)VALUES('${date}', ${time});`
+        );
+        const newClassSessid = await pool.query(
+          `SELECT id FROM class_session WHERE date= '${date}' AND session_id= ${time};`
+        );
+        console.log(newClassSessid.rows[0].id);
+        const newClass = await pool.query(
+          `INSERT INTO classes(class_session_id, instructor_name, level) VALUES(${newClassSessid.rows[0].id}, '${name}', '${level}');`
+        );
+      }
+      if (class_session_id?.rows?.length !== 0) {
+        const newClass = await pool.query(
+          `INSERT INTO classes(class_session_id, instructor_name, level) VALUES(${class_session_id.rows[0].id}, '${name}', '${level}');`
+        );
+      }
+      res.json({ status: "ok", message: "class is created" });
+    } catch (err) {
+      console.log(err.message);
+      res.status(500);
+    }
+  });
+  
 // ===============================================================================================================================================================================================================
 
 // ================================================================================================= STUDENTS =====================================================================================================
 
-// //gets all students
-// app.get("/api/students/getall", async (req, res) => {
-//   try {
-//     const profile = await pool.query("SELECT * from students");
-//     res.json(profile.rows);
-//   } catch (err) {
-//     console.log(err.message);
-//   }
-// });
-
-// //gets a student
+// //gets a student profile
 // app.get("/api/student/:id", async (req, res) => {
 //   try {
 //     const profile = await pool.query("SELECT * from students WHERE id = $1", [
@@ -239,28 +264,46 @@ app.put("/api/instructors/get", async (req, res) => {
 
 // book class
 app.post("/api/class/book", async (req, res) => {
-    try {
-      const {user_id, level, date, time} = req.body;
-      const class_id= await pool.query(`SELECT classes.id FROM classes JOIN class_session 
+  try {
+    const { user_id, level, date, time } = req.body;
+    const class_id =
+      await pool.query(`SELECT classes.id FROM classes JOIN class_session 
       ON class_session.id = classes.class_session_id 
           LEFT OUTER JOIN sessions ON sessions.id=class_session.session_id
           WHERE level = '${level}' AND date = '${date}' AND session_id=${time};`);
 
-      const classDetails = await pool.query(`INSERT into class_user(class_id, user_id) VALUES(${class_id.rows[0].id}, ${user_id})`);
-      res.json(classDetails);
-    } catch (err) {
-      console.log(err.message);
-      res.status(500);
-    }
-  })
+    const classDetails = await pool.query(
+      `INSERT into class_user(class_id, user_id) VALUES(${class_id.rows[0].id}, ${user_id})`
+    );
+    res.json(classDetails);
+  } catch (err) {
+    console.log(err.message);
+    res.status(500);
+  }
+});
+
+//Sign up for events
+app.post("/api/event/signup", async (req, res) => {
+  try {
+    const { user_id, event_id } = req.body;
+    const eventDetails = await pool.query(
+      `INSERT into event_user(user_id, event_id) VALUES(${user_id}, ${event_id})`
+    );
+    res.json(eventDetails);
+  } catch (err) {
+    console.log(err.message);
+    res.status(500);
+  }
+});
 // ====================================================================================================================================================================================================================
 
 // ================================================================================================= EVENTS =====================================================================================================
 // create an event
 app.post("/api/event/create", async (req, res) => {
   try {
-    const {image, description, start_date, end_date, start_time, end_time} = req.body;
-    console.log(req.body)
+    const { image, description, start_date, end_date, start_time, end_time } =
+      req.body;
+    console.log(req.body);
     const newEvent = await pool.query(
       `INSERT INTO events(image, description, start_date, end_date, start_time, end_time) VALUES ('${image}', '${description}', '${start_date}', '${end_date}', '${start_time}', '${end_time}');`
     );
@@ -271,40 +314,58 @@ app.post("/api/event/create", async (req, res) => {
   }
 });
 
-// //gets all events
-// app.get("/api/events/get", async (req, res) => {
-//   try {
-//     const events = await pool.query("SELECT * from events");
-//     res.json(events.rows);
-//   } catch (err) {
-//     console.log(err.message);
-//   }
-// });
+//gets all events
+app.get("/api/events/get", async (req, res) => {
+  try {
+    const events = await pool.query(
+      "SELECT id, image, start_date::varchar, end_date::varchar, start_time, end_time, description, title from events"
+    );
+    res.json(events.rows);
+  } catch (err) {
+    console.log(err.message);
+    res.status(500);
+  }
+});
 
-// //update a event
-// app.patch("/api/events/:id", async (req, res) => {
-//   try {
-//     const event = req.body;
-//     const updatedEvent = await pool.query(
-//       "UPDATE events SET image= $1, title= $2, description= $3 WHERE id = $4",
-//       [event.image, event.title, event.description, req.params.id]
-//     );
-//     res.json({ status: "ok", message: "profile is updated" });
-//   } catch (err) {
-//     console.log(err.message);
-//   }
-// });
+//update a event
+app.patch("/api/events/:id", async (req, res) => {
+  try {
+    const { image, description, start_date, end_date, start_time, end_time } =
+      req.body;
+    const updatedEvent = await pool.query(
+      `UPDATE events(image, description, start_date, end_date, start_time, end_time) VALUES ('${image}', '${description}', '${start_date}', '${end_date}', '${start_time}', '${end_time} WHERE id= ${req.params.id}');`
+    );
+    res.json({ status: "ok", message: "event is updated" });
+  } catch (err) {
+    console.log(err.message);
+    res.status(500);
+  }
+});
 
-// app.delete("/api/event/delete/:id", async (req, res) => {
-//   try {
-//     const events = await pool.query(
-//       `DELETE from events WHERE id= ${req.params.id}`
-//     );
-//     res.json({ status: "ok", message: "event deleted" });
-//   } catch (err) {
-//     console.log(err.message);
-//   }
-// });
+//gets an event info
+app.get("/api/event/:id", async (req, res) => {
+  try {
+    const eventDetail = await pool.query(
+      `SELECT * FROM events WHERE id= ${req.params.id};`
+    );
+    res.json(eventDetail.rows[0]);
+  } catch (err) {
+    console.log(err.message);
+    res.status(500);
+  }
+});
+
+app.delete("/api/event/delete/:id", async (req, res) => {
+  try {
+    const events = await pool.query(
+      `DELETE from events WHERE id= ${req.params.id}`
+    );
+    res.json({ status: "ok", message: "event deleted" });
+  } catch (err) {
+    console.log(err.message);
+    res.status(500);
+  }
+});
 // ====================================================================================================================================================================================================================
 
 // req.body = {

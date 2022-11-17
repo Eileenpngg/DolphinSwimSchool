@@ -25,6 +25,7 @@ const EventForm=()=>{
         console.log(errors);
       };
 
+      // Creates Event
       async function createEvent({
         url = "http://127.0.0.1:5001/api/event/create", 
         data
@@ -61,7 +62,7 @@ const EventForm=()=>{
                           <input
                             type="text"
                             className="form-control mt-2"
-                            placeholder="Please insert image url"
+                            placeholder="Insert image url"
                             {...register("image", {
                               required: {
                                 value: true,
