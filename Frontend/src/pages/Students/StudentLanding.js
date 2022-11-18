@@ -10,7 +10,7 @@ const StudentLanding=()=>{
 <Navbar/>
 {/* Content */}
 <div className="my-5">
-<h1 className="display-5">Raising Active, Confident And Growth-Minded Children Through Sports</h1>
+<h1 className="display-5 text-center">Raising Active, Confident And Growth-Minded Children Through Sports</h1>
 <div className="row">
   <div className="col-4 d-flex justify-content-center flex-column align-item-center h-100">
     <img

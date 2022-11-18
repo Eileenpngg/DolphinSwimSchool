@@ -1,7 +1,9 @@
-.form{
-    background-color: white;
+.form {
+  background-color: white;
+  height: 100vh;
 }
 
-.page{
-    background-color:#9ACEEC;
+.page {
+  background-color: #9aceec;
+  height: 100vh;
 }

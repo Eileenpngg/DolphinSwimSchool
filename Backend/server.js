@@ -90,33 +90,6 @@ app.post("/api/user/login", async (req, res) => {
 
 // ================================================================================================= INSTRUCTORS =====================================================================================================
 
-// //gets a instructor profile
-// app.get("/api/instructor/:id", async (req, res) => {
-//     try {
-//       const profile = await pool.query(
-//         `SELECT * from instructors WHERE id = ${id}`
-// );
-//       res.json(profile.rows);
-//     } catch (err) {
-//       console.log(err.message);
-//     }
-//   });
-
-//   //updates instructor
-//   app.patch("/api/instructor/:id", (req, res) => {
-//     try {
-//       const profile = req.body;
-//       Object.keys(profile).forEach(async (key) => {
-//         results = await pool.query(
-//           `UPDATE instructors SET ${key} = '${req.body[key]}';`
-//         );
-//       });
-//       res.json({ status: "ok", message: "profile is updated" });
-//     } catch (err) {
-//       console.log(err.message);
-//     }
-//   });
-
 //Creates classes
 app.post("/api/classes/create", async (req, res) => {
   try {
@@ -170,7 +143,7 @@ app.put("/api/schedule/get", async (req, res) => {
       console.log(date);
       console.log(instructor_name);
       console.log(session_id);
-      
+
       const classes = await pool.query(
         `SELECT * FROM class_session 
         JOIN classes ON classes.class_session_id= class_session.id 
@@ -180,24 +153,22 @@ app.put("/api/schedule/get", async (req, res) => {
 
         console.log(classes.rows);
   
-    //   if (class_session_id?.rows?.length === 0) {
-    //     const newClassSess = await pool.query(
-    //       `INSERT INTO class_session (date, session_id)VALUES('${date}', ${time});`
-    //     );
-    //     const newClassSessid = await pool.query(
-    //       `SELECT id FROM class_session WHERE date= '${date}' AND session_id= ${time};`
-    //     );
-    //     console.log(newClassSessid.rows[0].id);
-    //     const newClass = await pool.query(
-    //       `INSERT INTO classes(class_session_id, instructor_name, level) VALUES(${newClassSessid.rows[0].id}, '${name}', '${level}');`
-    //     );
-    //   }
-    //   if (class_session_id?.rows?.length !== 0) {
-    //     const newClass = await pool.query(
-    //       `INSERT INTO classes(class_session_id, instructor_name, level) VALUES(${class_session_id.rows[0].id}, '${name}', '${level}');`
-    //     );
-    //   }
       res.json(classes.rows);
+    } catch (err) {
+      console.log(err.message);
+      res.status(500);
+    }
+  });
+
+  //gets students that applied for an event
+  app.get("/api/event/student/:id", async (req, res) => {
+    try {
+        console.log(req.params.id)
+      const students = await pool.query(
+        `SELECT name from event_user JOIN events on events.id = event_user.event_id JOIN profiles on event_user.user_id = profiles.id WHERE events.id= ${req.params.id}`);
+        console.log(students.rows);
+  
+      res.json(students.rows);
     } catch (err) {
       console.log(err.message);
       res.status(500);
@@ -207,33 +178,6 @@ app.put("/api/schedule/get", async (req, res) => {
 // ===============================================================================================================================================================================================================
 
 // ================================================================================================= STUDENTS =====================================================================================================
-
-// //gets a student profile
-// app.get("/api/student/:id", async (req, res) => {
-//   try {
-//     const profile = await pool.query("SELECT * from students WHERE id = $1", [
-//       req.params.id,
-//     ]);
-//     res.json(profile.rows);
-//   } catch (err) {
-//     console.log(err.message);
-//   }
-// });
-
-// //update a student
-// app.patch("/api/student/:id", (req, res) => {
-//   try {
-//     const profile = req.body;
-//     Object.keys(profile).forEach(async (key) => {
-//       results = await pool.query(
-//         `UPDATE students SET ${key} = '${req.body[key]}';`
-//       );
-//     });
-//     res.json({ status: "ok", message: "profile is updated" });
-//   } catch (err) {
-//     console.log(err.message);
-//   }
-// });
 
 // get classes available with student level
 app.put("/api/classes/get", async (req, res) => {
@@ -378,6 +322,11 @@ app.delete("/api/event/:id", async (req, res) => {
     res.status(500);
   }
 });
+
+app.listen(5001, () => {
+    console.log("swim app is running!!");
+  });
+  
 // ====================================================================================================================================================================================================================
 
 // req.body = {
@@ -391,6 +340,57 @@ app.delete("/api/event/:id", async (req, res) => {
 //     let results = pool.query(query, [key, req.body[key]])
 // })
 
-app.listen(5001, () => {
-  console.log("swim app is running!!");
-});
+// //gets a instructor profile
+// app.get("/api/instructor/:id", async (req, res) => {
+//     try {
+//       const profile = await pool.query(
+//         `SELECT * from instructors WHERE id = ${id}`
+// );
+//       res.json(profile.rows);
+//     } catch (err) {
+//       console.log(err.message);
+//     }
+//   });
+
+//   //updates instructor
+//   app.patch("/api/instructor/:id", (req, res) => {
+//     try {
+//       const profile = req.body;
+//       Object.keys(profile).forEach(async (key) => {
+//         results = await pool.query(
+//           `UPDATE instructors SET ${key} = '${req.body[key]}';`
+//         );
+//       });
+//       res.json({ status: "ok", message: "profile is updated" });
+//     } catch (err) {
+//       console.log(err.message);
+//     }
+//   });
+
+//gets a student profile
+// app.get("/api/student/:id", async (req, res) => {
+//   try {
+//     const profile = await pool.query("SELECT * from students WHERE id = $1", [
+//       req.params.id,
+//     ]);
+//     res.json(profile.rows);
+//   } catch (err) {
+//     console.log(err.message);
+//   }
+// });
+
+// //update a student
+// app.patch("/api/student/:id", (req, res) => {
+//   try {
+//     const profile = req.body;
+//     Object.keys(profile).forEach(async (key) => {
+//       results = await pool.query(
+//         `UPDATE students SET ${key} = '${req.body[key]}';`
+//       );
+//     });
+//     res.json({ status: "ok", message: "profile is updated" });
+//   } catch (err) {
+//     console.log(err.message);
+//   }
+// });
+

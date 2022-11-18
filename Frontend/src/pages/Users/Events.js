@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import UserContext from "../../context";
 import EditEventForm from "../Instructors/EditEventForm";
-
+import ViewDetails from "../Instructors/ViewDetails";
 const Events = () => {
   const userctx = useContext(UserContext);
   const navigate = useNavigate();
@@ -16,6 +16,7 @@ const Events = () => {
     setEventId(e.target.key);
     setSelected(e.target.value);
     const data = { user_id: userCtx.userDetails.id, event_id: e.target.value };
+    console.log(data)
     eventSignUp({ data });
   };
 
@@ -125,14 +126,7 @@ const Events = () => {
               <div className="col-3 d-flex flex-column h-100">
                 {userctx.userDetails.is_instructor ? <EditEventForm event={event}/> : " "}
                 {userctx.userDetails.is_instructor ? (
-                  <button
-                    value={event.id}
-                    className="btn btn-secondary w-25 mt-4"
-                    type="submit"
-                    onClick={() => navigate("/event-details")}
-                  >
-                    View Details
-                  </button>
+                  <ViewDetails event={event}/>
                 ) : (
                   <button
                     key={event.id}

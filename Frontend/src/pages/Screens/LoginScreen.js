@@ -6,7 +6,7 @@ import UserContext from "../../context";
 const LoginScreen = (props) => {
   const [loginDetails, setLoginDetails] = useState();
   const userCtx = useContext(UserContext);
-  
+
   //react-hook-forms functionality
   const {
     register,
@@ -40,10 +40,11 @@ const LoginScreen = (props) => {
     } else {
       userCtx.setUserDetails({ ...jResponse });
     }
-    return jResponse;  }
+    return jResponse;
+  }
 
   return (
-    <div className={`${styles.page}`}>
+    <div className={`${styles.page} justify-content-center`}>
       <section className="container-md " id="login">
         <form
           className={`${styles.form}`}
@@ -53,7 +54,7 @@ const LoginScreen = (props) => {
             <div className="col-md-4">
               <input
                 type="email"
-                className="form-control mt-2"
+                className="form-control mt-4"
                 placeholder="Email"
                 {...register("email", {
                   required: {
@@ -100,7 +101,9 @@ const LoginScreen = (props) => {
                 Register
               </a>
             </p>
-            <img src="/xlab_logo.png" alt="" />
+          </div>
+          <div className="row dflex justify-content-center m-4">
+            <img src="/xlab_logo.png" alt="" style={{ width: "50vw" }} />
           </div>
         </form>
       </section>
