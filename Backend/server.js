@@ -264,7 +264,7 @@ app.post("/api/event/create", async (req, res) => {
   }
 });
 
-//gets all events
+//gets all events ------------**
 app.get("/api/events/get", async (req, res) => {
   try {
     const events = await pool.query(

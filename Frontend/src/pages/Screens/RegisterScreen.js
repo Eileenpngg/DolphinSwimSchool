@@ -52,7 +52,7 @@ const RegisterScreen = (props) => {
   }
 
 return(
-<div>
+<div className={`${styles.page} `}>
       <section className="container-md " id="login">
         <form className={`${styles.form}`} onSubmit={handleSubmit(onSubmit, onError)}>
         <div className="form-outline m-4 row justify-content-center">
@@ -203,7 +203,7 @@ return(
               Login
             </a>
           </p>
-            <img src="/xlab_logo.png" alt=""/>
+            <img src="/xlab_logo.png" alt="" style={{ width: "50vw" }}/>
           </div>
         </form>
       </section>

@@ -44,12 +44,17 @@ const LoginScreen = (props) => {
   }
 
   return (
-    <div className={`${styles.page} justify-content-center`}>
-      <section className="container-md " id="login">
+    <div className={`${styles.page} `}>
+      <section
+        className="container-md justify-content-center "
+        id="login"
+      >
         <form
           className={`${styles.form}`}
           onSubmit={handleSubmit(onSubmit, onError)}
         >
+                  
+          <div className="justify-content-center" style={{paddingTop: "10vh", paddingBottom: "10vh" }}>
           <div className="form-outline m-4 row justify-content-center">
             <div className="col-md-4">
               <input
@@ -104,6 +109,7 @@ const LoginScreen = (props) => {
           </div>
           <div className="row dflex justify-content-center m-4">
             <img src="/xlab_logo.png" alt="" style={{ width: "50vw" }} />
+          </div>
           </div>
         </form>
       </section>
