@@ -1,6 +1,7 @@
 # Swim_Booking_App
 
 ## Introduction 
+A web application for a swim school for ease of creating and booking of classes and events
 
 ## Technologies Used 
 
@@ -27,3 +28,5 @@
 - Update a event
 - Delete a event
 - View class schedule
+
+
