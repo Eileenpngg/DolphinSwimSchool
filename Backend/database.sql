@@ -1,10 +1,7 @@
-create DATABASE swim_app
-
 CREATE TABLE users(
 	id SERIAL PRIMARY KEY,
 	email VARCHAR(30),
 	password VARCHAR(100),
-	is_admin BOOLEAN
 );
 
 CREATE TABLE profiles(
@@ -13,13 +10,14 @@ CREATE TABLE profiles(
     age INT,
     level VARCHAR(2),
     contact VARCHAR(8),
-    is_instructor BOOLEAN
+    is_instructor BOOLEAN,
+    FOREIGN KEY(id) REFERENCES users(id)
     );
 
 CREATE TABLE sessions(
     id SERIAL PRIMARY KEY,
-    start_time TIMESTAMP,
-    end_time TIMESTAMP
+    start_time TIME,
+    end_time TIME
 	);
 
 -- seed sessions --
@@ -35,13 +33,17 @@ INSERT INTO sessions(start_time, end_time) VALUES ('16:00', '16:50');
 
 INSERT INTO sessions(start_time, end_time) VALUES ('17:10', '18:00');
 
+
 CREATE TABLE events(
 id SERIAL PRIMARY KEY,
+title TEXT,
 image TEXT, 
-start_time TIMESTAMP,
-end_time TIMESTAMP,
+start_date DATE,
+end_date DATE,
+start_time TIME,
+end_time TIME,
 description text
-);user_id
+);
 
 
 CREATE TABLE event_user(
@@ -55,10 +57,11 @@ CREATE TABLE event_user(
 
 CREATE TABLE class_session(
     id SERIAL PRIMARY KEY,
-    date TIMESTAMP,
+    date DATE,
     session_id INT,
     FOREIGN KEY(session_id) REFERENCES sessions(id)
 )
+
 
 CREATE TABLE classes(
 	id SERIAL PRIMARY KEY,
@@ -78,3 +81,6 @@ CREATE TABLE class_user(
 	FOREIGN KEY(class_id) REFERENCES
 	classes(id)
 )
+
+
+
