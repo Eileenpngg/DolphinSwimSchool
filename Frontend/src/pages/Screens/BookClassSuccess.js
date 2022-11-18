@@ -4,7 +4,7 @@ import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutline";
 const BookClassSuccess = () => {
   return (
     <div>
-      <h1 className="text-center">Registration!</h1>
+      <h1 className="text-center">Booked Class!</h1>
       <div
         className="d-flex justify-content-center m-5"
         style={{ transform: "scale(3)", color: "green" }}

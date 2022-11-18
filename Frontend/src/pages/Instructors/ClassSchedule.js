@@ -3,7 +3,7 @@ import UserContext from "../../context";
 const ClassSchedule=()=>{
     const weekDay = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
     
-    const currentDate =  new Date().toISOString().split("T")[0]
+    const nowDate= new Date().toISOString().split("T")[0] 
     const currentDay= weekDay[new Date().getDay()]
     const userCtx= useContext(UserContext)
     const [sessions, setSessions]=useState()
@@ -11,7 +11,7 @@ const ClassSchedule=()=>{
 
 const handleClick=(e)=>{
 const instructor_name=userCtx.userDetails.name   
-const date= currentDate
+const date= nowDate
 const session_id= e.target.value 
 console.log(instructor_name, date, session_id)
 getSchedule({instructor_name, date, session_id})                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
@@ -76,7 +76,7 @@ async function getSchedule({
      <div className="col-4 mt-4 text-center">
      <div class="card">
         <div class="card-body">
-            Date: {currentDate}
+            Date: {nowDate}
         </div>
     </div>
     </div>
@@ -107,7 +107,7 @@ async function getSchedule({
     </h2>
     <div id={`collapseOne${session.id}`} class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
       <div class="accordion-body">
-        <strong>Students Name</strong>  {Object.values(schedule).map((name)=><p>{name.name}</p>)}
+        <strong>Students Name</strong>  {schedule?Object.values(schedule).map((name)=><p>{name.name}</p>):""}
       </div>
       </div>
 </div>):""}
