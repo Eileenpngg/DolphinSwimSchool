@@ -13,7 +13,6 @@ const handleClick=(e)=>{
 const instructor_name=userCtx.userDetails.name   
 const date= nowDate
 const session_id= e.target.value 
-console.log(instructor_name, date, session_id)
 getSchedule({instructor_name, date, session_id})                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
 }
   //To populate sessions drop down
@@ -37,7 +36,7 @@ getSchedule({instructor_name, date, session_id})
     }
     return jResponse;  }
     
-//To populate sessions drop down
+//To get schedule
 async function getSchedule({
     url = "http://127.0.0.1:5001/api/schedule/get", 
     instructor_name,

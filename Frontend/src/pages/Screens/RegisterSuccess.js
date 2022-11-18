@@ -3,7 +3,7 @@ import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutline";
 
 const RegisterSuccess = () => {
   return (
-    <div>
+    <div style={{padding: '30vh'}}>
       <h1 className="text-center">Registration!</h1>
       <div
         className="d-flex justify-content-center m-5"

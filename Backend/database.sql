@@ -1,3 +1,5 @@
+create DATABASE swim_app
+
 CREATE TABLE users(
 	id SERIAL PRIMARY KEY,
 	email VARCHAR(30),

@@ -1,9 +1,9 @@
 import React from "react";
 import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutline";
-
+import { Link } from "react-router-dom";
 const BookClassSuccess = () => {
   return (
-    <div>
+    <div style={{padding: '30vh'}}>
       <h1 className="text-center">Booked Class!</h1>
       <div
         className="d-flex justify-content-center m-5"
@@ -12,13 +12,13 @@ const BookClassSuccess = () => {
         <CheckCircleOutlinedIcon />
       </div>
       <p className="text-center">
-            <a
+            <Link
               className="link-primary"
               id="Login"
-              href="/book-a-class"
+              to="/book-a-class"
             >
               Book Another Class
-            </a>
+            </Link>
           </p>
     </div>
   );
