@@ -1,4 +1,4 @@
-# Swim_Booking_App
+# DolphinSwimSchool
 
 ## Introduction 
 A web application for a swim school for ease of creating and booking of classes and events
