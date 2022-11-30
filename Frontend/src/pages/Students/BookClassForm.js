@@ -2,6 +2,9 @@ import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import UserContext from "../../context";
+
+import swimschoollogo from "../Instructors/Images/swimschoollogo.png";
+
 const BookClassForm = () => {
   // To Do: Connect to back end
   const userCtx = useContext(UserContext);
@@ -106,7 +109,7 @@ const BookClassForm = () => {
     return jResponse;  
   }
 
-  //Use Effects
+  //UseEffects
   useEffect(() => {
     if (date !== undefined) {
       getClasses({ level: userCtx.userDetails.level, date });
@@ -132,8 +135,8 @@ const BookClassForm = () => {
   return (
     <div>
       <section className="container-md" id="book_class">
-        <form onSubmit={handleSubmit(onSubmit, onError)}>
-          <h5 className="m-4">
+        <form onSubmit={handleSubmit(onSubmit, onError)} style={{marginTop:'10vh'}}>
+          <h5 className="m-4" style={{color:'#FFFFFF'}}>
             <u>Student Details</u>
           </h5>
           <div className="form-outline m-4 row justify-content-center">
@@ -170,19 +173,7 @@ const BookClassForm = () => {
                 {errors.age?.message}
               </p>
             </div>
-            <div className="col-md-2"></div>
-            <div className="col-md-2 flex-column">
-              <button className="btn btn-secondary w-100 mb-4" type="submit">
-                Book Class
-              </button>
-              <button
-                className="btn btn-secondary w-100"
-                type="cancel"
-                onClick={() => navigate("/student")}
-              >
-                Cancel
-              </button>
-            </div>
+            <div className="col-md-4"></div>
           </div>
 
           <div className="form-outline m-4 row justify-content-center">
@@ -221,13 +212,24 @@ const BookClassForm = () => {
                 {errors.contact?.message}
               </p>
             </div>
-            <div className="col-md-4"></div>
+            <div className="col-md-2"></div>
+            <div className="col-md-2 flex-column">
+              <button className="btn btn-secondary w-100 mb-4" type="submit">
+                Book Class
+              </button>
+              <button className="btn btn-secondary w-100 mb-4" type="submit" onClick={() => navigate("/")}>
+                Cancel
+              </button>
+              <button className="btn btn-secondary w-100 mb-4" type="cancel" onClick={() => navigate("/")}>
+                Cancel
+              </button>
+            </div>
           </div>
 
-          <h5 className="m-4">
+          <h5 className="m-4" style={{color:'#FFFFFF'}}>
             <u>Booking Details</u>
           </h5>
-          <div className="form-outline m-4 row justify-content-center">
+          <div className="form-outline m-4 row justify-content-center" style={{height:'10vw'}}>
             <div className="col-md-4">
               <input
                 type="date"
@@ -296,7 +298,7 @@ const BookClassForm = () => {
             </div>
             <div className="col-md-1"></div>
             <div className="col-md-3 align-self-end">
-              <img src="/xlab_logo.png" alt="" width="300px" />
+              <img src={swimschoollogo} alt="" width="300px" style={{transform:'translateY(-50%)'}}/>
             </div>
           </div>
           <div className="form-outline row justify-content-center">

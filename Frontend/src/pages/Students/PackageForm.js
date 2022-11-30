@@ -6,7 +6,8 @@ const PackageForm=()=>{
     }
 return (
     <>
-    <h1 className="display-5 text-center">Packages</h1>
+    <section style={{marginTop:'10vh'}}>
+    <h1 className="display-5 text-center" style={{color:'#FFFFFF'}}>Packages</h1>
 
     <div className="row m-4">
     <div className="col-3"></div>
@@ -42,6 +43,7 @@ return (
     </div>
     <div className="col-3"></div>
     </div>
+    </section>
 
     </>
 )

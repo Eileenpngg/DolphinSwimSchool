@@ -1,22 +1,11 @@
 @import url("https://fonts.googleapis.com/css2?family=Oxygen:wght@300;400;700&display=swap");
 
-* {
-  box-sizing: border-box;
+#root{
+  overflow: hidden;
+  background-color: #25274D;
+  height:100vh;
 }
-
-html {
-  font-family: "Oxygen", sans-serif;
-}
-
-body {
-  margin: 0;
-  background-color: whitesmoke;
-}
-
-.centered {
-  margin: 3rem auto;
-  text-align: center;
+.slick-track {
   display: flex;
-  justify-content: center;
-  align-items: center;
 }
+

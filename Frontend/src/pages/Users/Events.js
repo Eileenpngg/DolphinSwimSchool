@@ -98,7 +98,7 @@ const Events = () => {
 
   return (
     <>
-      <h1 className="text-center m-4">
+      <h1 className="text-center m-4" style={{color:'#FFFFFF'}}>
         <u>Events</u>
       </h1>
       {events
@@ -114,14 +114,14 @@ const Events = () => {
                 />
               </div>
               <div className="col-3 d-flex flex-column align-item-center h-50">
-                <h1 className="text-center m-4">{event.title}</h1>
-                <p>
+                <h1 className="text-center m-4" style={{color:'#FFFFFF'}}>{event.title}</h1>
+                <p style={{color:'#FFFFFF'}}>
                   Date: {event.start_date} - {event.end_date}
                 </p>
-                <p>
+                <p style={{color:'#FFFFFF'}}>
                   Time: {event.start_time} - {event.end_time}
                 </p>
-                <p className={`text-start d-flex m-0`}>{event.description}</p>
+                <p className={`text-start d-flex m-0`} style={{color:'#FFFFFF'}}>{event.description}</p>
               </div>
               <div className="col-3 d-flex flex-column h-100">
                 {userctx.userDetails.is_instructor ? <EditEventForm event={event}/> : " "}

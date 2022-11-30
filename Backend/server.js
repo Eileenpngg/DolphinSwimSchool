@@ -3,13 +3,16 @@ const app = express();
 const cors = require("cors");
 const pool = require("./db");
 const bcrypt = require("bcrypt");
+const jwtGenerator = require("./jwt/jwtgenerator");
+const { v4: uuidv4 } = require("uuid");
+const jwt = require("jsonwebtoken");
+
 //middleware
 app.use(cors());
 app.use(express.json());
 
 //Routes
 // ================================================================================================= REGISTER =====================================================================================================
-
 app.post("/api/user/create", async (req, res) => {
   try {
     const { name, age, level, contact, is_instructor, email, password } =
@@ -25,23 +28,31 @@ app.post("/api/user/create", async (req, res) => {
     }
     const saltRound = 12;
     const bcryptedPassword = await bcrypt.hash(password, saltRound);
-    console.log(name, age, level, email, contact, is_instructor);
+
     const newUser = await pool.query(
-      `INSERT INTO users(email, password) VALUES ('${email}', '${bcryptedPassword}');`
+      `INSERT INTO users(email, password) VALUES ('${email}', '${bcryptedPassword} RETURNING *');`
     );
+    console.log(newUser.rows)
+
     const user_id = await pool.query(
       `SELECT id FROM users WHERE email= '${email}';`
     );
+
     const id = user_id.rows[0].id;
+    console.log(id)
+
     const newProfile = await pool.query(
       `INSERT INTO profiles(id, name, age, level, contact, is_instructor ) VALUES (${id}, '${name}', ${age}, '${level}', ${contact}, '${is_instructor}');`
     );
-    res.json({ status: "ok", message: "profile is created" });
+
+    // res.json({ status: "ok", message: "profile is created" });
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
   }
 });
+
+
 
 // ===============================================================================================================================================================================================================
 // ================================================================================================= LOGIN =====================================================================================================
@@ -79,7 +90,21 @@ app.post("/api/user/login", async (req, res) => {
 
       if (!validPassword) {
         return res.status(401).json("Password or Email is incorrect");
-      }
+      } 
+
+      const payload ={
+        id: user.id,
+        email: user.email
+      };
+
+      const access = jwt.sign(payload, process.env.ACCESS_SECRET,{
+        expiresIn: "20m",
+        jwtid: uuidv4(),
+      })
+      const refresh = jwt.sign(payload, process.env.REFRESH_SECRET, {
+        expiresIn: "30d",
+        jwtid: uuidv4(),
+      });  
     }
     res.json(response);
   } catch (err) {
@@ -87,6 +112,33 @@ app.post("/api/user/login", async (req, res) => {
     res.status(500).send("Login Failed");
   }
 });
+
+//REFRESH 
+// router.post("/refresh", (req, res) => {
+//   try {
+//     const decoded = jwt.verify(req.body.refresh, process.env.REFRESH_SECRET);
+//     const payload = {
+//       id: decoded.id,
+//       name: decoded.name,
+//     };
+//     const access = jwt.sign(payload, process.env.ACCESS_SECRET, {
+//       expiresIn: "20m",
+//       jwtid: uuidv4(),
+//     });
+
+//     const response = {
+//       access,
+//     };
+//     res.json(response);
+//   } catch (err) {
+//     console.log("POST/users/refresh", err);
+//     res.status(401).json({
+//       status: "error",
+//       message: "unauthorised",
+//     });
+//   }
+// });
+
 
 // ================================================================================================= INSTRUCTORS =====================================================================================================
 
@@ -138,43 +190,45 @@ app.get("/api/sessions/get", async (req, res) => {
 
 //gets schedule
 app.put("/api/schedule/get", async (req, res) => {
-    try {
-      const {date, session_id, instructor_name} = req.body;
-      console.log(date);
-      console.log(instructor_name);
-      console.log(session_id);
+  try {
+    const { date, session_id, instructor_name } = req.body;
+    console.log(date);
+    console.log(instructor_name);
+    console.log(session_id);
 
-      const classes = await pool.query(
-        `SELECT * FROM class_session 
+    const classes = await pool.query(
+      `SELECT * FROM class_session 
         JOIN classes ON classes.class_session_id= class_session.id 
         JOIN class_user ON class_user.class_id= classes.id 
         JOIN profiles on class_user.user_id= profiles.id 
-        WHERE date= '${date}' AND session_id=${session_id} AND instructor_name='${instructor_name}';`);
+        WHERE date= '${date}' AND session_id=${session_id} AND instructor_name='${instructor_name}';`
+    );
 
-        console.log(classes.rows);
-  
-      res.json(classes.rows);
-    } catch (err) {
-      console.log(err.message);
-      res.status(500);
-    }
-  });
+    console.log(classes.rows);
 
-  //gets students that applied for an event
-  app.get("/api/event/student/:id", async (req, res) => {
-    try {
-        console.log(req.params.id)
-      const students = await pool.query(
-        `SELECT name from event_user JOIN events on events.id = event_user.event_id JOIN profiles on event_user.user_id = profiles.id WHERE events.id= ${req.params.id}`);
-        console.log(students.rows);
-  
-      res.json(students.rows);
-    } catch (err) {
-      console.log(err.message);
-      res.status(500);
-    }
-  });
-  
+    res.json(classes.rows);
+  } catch (err) {
+    console.log(err.message);
+    res.status(500);
+  }
+});
+
+//gets students that applied for an event
+app.get("/api/event/student/:id", async (req, res) => {
+  try {
+    console.log(req.params.id);
+    const students = await pool.query(
+      `SELECT name from event_user JOIN events on events.id = event_user.event_id JOIN profiles on event_user.user_id = profiles.id WHERE events.id= ${req.params.id}`
+    );
+    console.log(students.rows);
+
+    res.json(students.rows);
+  } catch (err) {
+    console.log(err.message);
+    res.status(500);
+  }
+});
+
 // ===============================================================================================================================================================================================================
 
 // ================================================================================================= STUDENTS =====================================================================================================
@@ -251,8 +305,15 @@ app.post("/api/event/signup", async (req, res) => {
 // create an event
 app.post("/api/event/create", async (req, res) => {
   try {
-    const { title, image, description, start_date, end_date, start_time, end_time } =
-      req.body;
+    const {
+      title,
+      image,
+      description,
+      start_date,
+      end_date,
+      start_time,
+      end_time,
+    } = req.body;
     console.log(req.body);
     const newEvent = await pool.query(
       `INSERT INTO events(title, image, description, start_date, end_date, start_time, end_time) VALUES ('${title}','${image}', '${description}', '${start_date}', '${end_date}', '${start_time}', '${end_time}');`
@@ -280,8 +341,15 @@ app.get("/api/events/get", async (req, res) => {
 //update a event
 app.patch("/api/events/:id", async (req, res) => {
   try {
-    const { title, image, description, start_date, end_date, start_time, end_time } =
-      req.body;
+    const {
+      title,
+      image,
+      description,
+      start_date,
+      end_date,
+      start_time,
+      end_time,
+    } = req.body;
     const updatedEvent = await pool.query(
       `UPDATE events SET title='${title}', image= '${image}', description= '${description}', start_date='${start_date}', end_date='${end_date}', start_time= '${start_time}', end_time='${end_time}' WHERE id= ${req.params.id};`
     );
@@ -307,15 +375,13 @@ app.get("/api/event/:id", async (req, res) => {
 
 //delete an event
 app.delete("/api/event/:id", async (req, res) => {
-    try {
-        const id = req.params.id
-        const deleteEventUser = await pool.query(
-            `DELETE from event_user WHERE event_id= ${id}`
-        );
-        const deleteEvent = await pool.query(
-        `DELETE from events WHERE id= ${id}`
+  try {
+    const id = req.params.id;
+    const deleteEventUser = await pool.query(
+      `DELETE from event_user WHERE event_id= ${id}`
     );
-  
+    const deleteEvent = await pool.query(`DELETE from events WHERE id= ${id}`);
+
     res.json({ status: "ok", message: "event deleted" });
   } catch (err) {
     console.log(err.message);
@@ -324,9 +390,9 @@ app.delete("/api/event/:id", async (req, res) => {
 });
 
 app.listen(5001, () => {
-    console.log("swim app is running!!");
-  });
-  
+  console.log("swim app is running!!");
+});
+
 // ====================================================================================================================================================================================================================
 
 // req.body = {
@@ -393,4 +459,3 @@ app.listen(5001, () => {
 //     console.log(err.message);
 //   }
 // });
-
