@@ -7,9 +7,9 @@ const Navbar=()=>{
 
 <nav className={`${styles.nav}`}>
   <ul className={`menu ${styles.menu}`}>
-    <li className={`menu headings ${styles.headings}`}><a href="#0" className={`menu headingLink ${styles.headingLink}`}>Home</a></li>
-    <li className={`menu headings ${styles.headings}`}><a href="#0" className={`menu headingLink ${styles.headingLink}`}>About</a></li>
-    <li className={`menu headings ${styles.headings}`}><a href="#0"  className={`menu headingLink ${styles.headingLink}`}>Contact</a></li>
+    <li className={`menu headings ${styles.headings}`}><a href="/" className={`menu headingLink ${styles.headingLink}`}>Home</a></li>
+    <li className={`menu headings ${styles.headings}`}><a href="/about" className={`menu headingLink ${styles.headingLink}`}>About</a></li>
+    <li className={`menu headings ${styles.headings}`}><a href="/contact"  className={`menu headingLink ${styles.headingLink}`}>Contact</a></li>
 
     <li className={`menu headings ${styles.headings}`}><a href="#0" className={`menu headingLink ${styles.headingLink}`}>Schedule</a>
       <ul className={`subMenu ${styles.subMenu}`}>
@@ -21,7 +21,7 @@ const Navbar=()=>{
 
     <li className={`menu headings ${styles.headings}`}><a href="#0" className={`menu headingLink ${styles.headingLink}`}>Profile</a>
       <ul className={`subMenu ${styles.subMenu}`}>
-        <li className={`menu subMenuHeading ${styles.subMenuHeading}`}><a href="#0" >View Profile</a></li>
+        <li className={`menu subMenuHeading ${styles.subMenuHeading}`}><a href="/profile" >View Profile</a></li>
         <li className={`menu subMenuHeading ${styles.subMenuHeading}`}><a href="/">Log Out</a></li>
       </ul>
     </li>

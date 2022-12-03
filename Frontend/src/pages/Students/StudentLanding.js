@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styles from "../Instructors/instructorlanding.module.css";
 import Navbar from "../../Navbar";
 import Footer from "../Footer";
 import Slider from "react-slick";
@@ -26,7 +25,7 @@ const StudentLanding = () => {
           <div
             className="arrow next"
             onClick={onClick}
-            style={{ top: "50%", right: "20%", position: "absolute" }}
+            style={{ top: "140%", right: "30%", position: "absolute" }}
           >
             <FaArrowRight />
           </div>
@@ -39,7 +38,7 @@ const StudentLanding = () => {
       <IconContext.Provider value={{ color: "white" }}>
         <div
           className="arrow prev"
-          style={{ top: "50%", left: "20%", position: "absolute" }}
+          style={{ top: "140%", left: "25%", position: "absolute" }}
           onClick={onClick}
         >
           <FaArrowLeft />
@@ -68,7 +67,7 @@ const StudentLanding = () => {
         transform: "translate(40%,-25%)",
         }}/>
 
-      <section style={{ marginBottom: "30vh" }}>
+      <section style={{ marginBottom: "30vh", transform:'translateY(-40%)'}}>
         <div>
           <Slider {...settings}>
             {images.map((img, idx) => (
@@ -101,6 +100,7 @@ const StudentLanding = () => {
                       top: "50%",
                       transform: "translateX(-50%)",
                       borderRadius: "10%",
+                      boxShadow: '0px 8px 28px #AAABB8'
                     }}
                     onClick={()=>navigate(links[idx])}
                   />
@@ -115,65 +115,3 @@ const StudentLanding = () => {
   );
 };
 export default StudentLanding;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import React from "react"
-// import styles from './studentlanding.module.css'
-// import { useNavigate } from "react-router-dom";
-// import Navbar from "../../Navbar";
-// const StudentLanding=()=>{
-//   const navigate= useNavigate()
-//     return(
-//     <>
-// {/* Navbar */}
-// <Navbar/>
-// {/* Content */}
-// <div className="my-5">
-// <h1 className="display-5 text-center">Raising Active, Confident And Growth-Minded Children Through Sports</h1>
-// <div className="row">
-//   <div className="col-4 d-flex justify-content-center flex-column align-item-center h-100">
-//     <img
-//       src='/kidswimming.jpeg'
-//       alt="kid_swimming"
-//       className="bg-dark"
-//     />
-//     <p className={`text-center d-flex align-items-center justify-content-center m-0 p-4 w-100 ${styles.card}`} onClick={()=>{navigate('/book-a-class')}}>
-//     Book A Class
-//     </p>
-//   </div>
-//   <div className="col-4 d-flex justify-content-center flex-column align-item-center h-100">
-//   <img src='/events.jpeg' height='330vw' alt="task icon to job list" />
-//     <p className={`text-center d-flex align-items-center justify-content-center m-0 p-4 w-100 ${styles.card}`} onClick={()=>{navigate('/events')}}>
-//     Events
-//     </p>
-//   </div>
-//   <div className="col-4 d-flex justify-content-center flex-column align-item-center h-100">
-//   <img src='/purchasepackage.webp' alt="task icon to job list" />
-//     <p className={`text-center d-flex align-items-center justify-content-center m-0 p-4 w-100 ml-1 ${styles.card}`} onClick={()=>{navigate('/package-form')}}>
-//     Purchase A package   
-//     </p>
-//   </div>
-// </div>
-// </div>
-// </>
-//     )
-// }
-// export default StudentLanding

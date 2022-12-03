@@ -9,3 +9,12 @@
   display: flex;
 }
 
+.slide{
+  transform: scale(1);
+  opacity: 0.5;
+}
+.activeSlide{
+  transform: scale(1.1);
+  opacity: 1;
+
+}

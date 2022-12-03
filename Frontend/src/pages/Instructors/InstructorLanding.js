@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styles from "./instructorlanding.module.css";
 import Navbar from "../../Navbar";
 import Footer from "../Footer";
 import Slider from "react-slick";
@@ -26,7 +25,7 @@ const InstructorLanding = () => {
           <div
             className="arrow next"
             onClick={onClick}
-            style={{ top: "50%", right: "20%", position: "absolute" }}
+            style={{ top: "140%", right: "30%", position: "absolute" }}
           >
             <FaArrowRight />
           </div>
@@ -36,10 +35,10 @@ const InstructorLanding = () => {
   };
   const PrevArrow = ({ onClick }) => {
     return (
-      <IconContext.Provider value={{ color: "white" }}>
+      <IconContext.Provider value={{ color: "white" , cursor:'pointer'}}>
         <div
           className="arrow prev"
-          style={{ top: "50%", left: "20%", position: "absolute" }}
+          style={{ top: "140%", left: "25%", position: "absolute" }}
           onClick={onClick}
         >
           <FaArrowLeft />
@@ -68,7 +67,7 @@ const InstructorLanding = () => {
         transform: "translate(40%,-25%)",
         }}/>
 
-      <section style={{ marginBottom: "30vh" }}>
+      <section style={{ marginBottom: "30vh" , transform:'translateY(-40%)'}}>
         <div>
           <Slider {...settings}>
             {images.map((img, idx) => (
@@ -104,6 +103,7 @@ const InstructorLanding = () => {
                     }}
                     onClick={()=>navigate(links[idx])}
                   />
+
                 </div>
               </div>
             ))}

@@ -213,14 +213,11 @@ const BookClassForm = () => {
               </p>
             </div>
             <div className="col-md-2"></div>
-            <div className="col-md-2 flex-column">
+            <div className="col-md-2 flex-column" style={{zIndex:'99'}}>
               <button className="btn btn-secondary w-100 mb-4" type="submit">
                 Book Class
               </button>
               <button className="btn btn-secondary w-100 mb-4" type="submit" onClick={() => navigate("/")}>
-                Cancel
-              </button>
-              <button className="btn btn-secondary w-100 mb-4" type="cancel" onClick={() => navigate("/")}>
                 Cancel
               </button>
             </div>
