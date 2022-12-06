@@ -16,6 +16,7 @@ const LoginScreen = (props) => {
 
   const onSubmit = (data) => {
     handleLogin({ data });
+
   };
   const onError = (errors) => {
     console.log(errors);

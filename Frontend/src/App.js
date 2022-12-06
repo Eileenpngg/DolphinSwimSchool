@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React,{useState, useEffect, useContext} from "react";
 import LoginScreen from "./pages/Screens/LoginScreen";
 import UserContext from "./context";
 import { Route, Routes } from "react-router-dom";
@@ -17,6 +17,34 @@ import BookClassSuccess from "./pages/Screens/BookClassSuccess";
 import Profile from "./pages/Users/Profile";
 function App() {
   const [userDetails, setUserDetails] = useState({});
+  const [remainingPackage, setRemainingPackage]=useState()
+
+  const getPackage=async({
+    url=`http://127.0.0.1:5001/api/packages/${userDetails.id}`
+  })=>{
+    const response= await fetch(url, {
+      method:'PUT',
+      headers:{
+        "Accept": "application/json",
+        "Content-Type":'application/json'
+      }
+    });
+
+    const jResponse= await response.json();
+    if (response.status===401){
+      console.log(`${jResponse.message}`)
+    } else {
+      console.log(jResponse)
+      setRemainingPackage(jResponse.remaining)
+    }
+    return jResponse
+  }
+
+  useEffect(()=>{
+    if(userDetails?.id){
+      getPackage({})
+    }
+    },[userDetails])
 
   function displayLandingPage() {
 
@@ -72,7 +100,7 @@ const landingPage = displayLandingPage();
 <Route path="/class-schedule" element={<ClassSchedule/>} />
 <Route path="/create-event-success" element={<CreateEventSuccess/>} />
 <Route path="/book-class-success" element={<BookClassSuccess/>} />
-<Route path="/profile" element={<Profile/>} />
+<Route path="/profile" element={<Profile remainingPackage={{remainingPackage}}/>} />
 </Routes>
 </UserContext.Provider>
 

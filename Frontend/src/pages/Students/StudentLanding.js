@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../../Navbar";
 import Footer from "../Footer";
@@ -10,6 +10,7 @@ import kidsswimming from "../Instructors/Images/kidswimming.jpeg";
 import events from "../Instructors/Images/events.jpeg";
 import purchasepackage from "../Instructors/Images/purchasepackage.webp";
 import swimschoollogo from "../Instructors/Images/swimschoollogo.png";
+import UserContext from "../../context";
 
 const StudentLanding = () => {
   const [imageIndex, setImageIndex] = useState(0);
@@ -21,7 +22,7 @@ const StudentLanding = () => {
   const NextArrow = ({ onClick }) => {
     return (
       <>
-        <IconContext.Provider value={{ color: "white" }}>
+        <IconContext.Provider value={{ color: "black" }}>
           <div
             className="arrow next"
             onClick={onClick}
@@ -35,7 +36,7 @@ const StudentLanding = () => {
   };
   const PrevArrow = ({ onClick }) => {
     return (
-      <IconContext.Provider value={{ color: "white" }}>
+      <IconContext.Provider value={{ color: "black" }}>
         <div
           className="arrow prev"
           style={{ top: "140%", left: "25%", position: "absolute" }}

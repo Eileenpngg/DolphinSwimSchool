@@ -32,14 +32,14 @@ app.post("/api/user/create", async (req, res) => {
     const newUser = await pool.query(
       `INSERT INTO users(email, password) VALUES ('${email}', '${bcryptedPassword} RETURNING *');`
     );
-    console.log(newUser.rows)
+    console.log(newUser.rows);
 
     const user_id = await pool.query(
       `SELECT id FROM users WHERE email= '${email}';`
     );
 
     const id = user_id.rows[0].id;
-    console.log(id)
+    console.log(id);
 
     const newProfile = await pool.query(
       `INSERT INTO profiles(id, name, age, level, contact, is_instructor ) VALUES (${id}, '${name}', ${age}, '${level}', ${contact}, '${is_instructor}');`
@@ -51,8 +51,6 @@ app.post("/api/user/create", async (req, res) => {
     res.status(500).send("Server Error");
   }
 });
-
-
 
 // ===============================================================================================================================================================================================================
 // ================================================================================================= LOGIN =====================================================================================================
@@ -90,21 +88,21 @@ app.post("/api/user/login", async (req, res) => {
 
       if (!validPassword) {
         return res.status(401).json("Password or Email is incorrect");
-      } 
+      }
 
-      const payload ={
+      const payload = {
         id: user.id,
-        email: user.email
+        email: user.email,
       };
 
-      const access = jwt.sign(payload, process.env.ACCESS_SECRET,{
+      const access = jwt.sign(payload, process.env.ACCESS_SECRET, {
         expiresIn: "20m",
         jwtid: uuidv4(),
-      })
+      });
       const refresh = jwt.sign(payload, process.env.REFRESH_SECRET, {
         expiresIn: "30d",
         jwtid: uuidv4(),
-      });  
+      });
     }
     res.json(response);
   } catch (err) {
@@ -113,7 +111,7 @@ app.post("/api/user/login", async (req, res) => {
   }
 });
 
-//REFRESH 
+//REFRESH
 // router.post("/refresh", (req, res) => {
 //   try {
 //     const decoded = jwt.verify(req.body.refresh, process.env.REFRESH_SECRET);
@@ -138,7 +136,6 @@ app.post("/api/user/login", async (req, res) => {
 //     });
 //   }
 // });
-
 
 // ================================================================================================= INSTRUCTORS =====================================================================================================
 
@@ -249,7 +246,7 @@ app.put("/api/classes/get", async (req, res) => {
   }
 });
 
-//get instructos
+//get instructors
 app.put("/api/instructors/get", async (req, res) => {
   try {
     const { level, date, time } = req.body;
@@ -299,6 +296,7 @@ app.post("/api/event/signup", async (req, res) => {
     res.status(500);
   }
 });
+
 // ====================================================================================================================================================================================================================
 
 // ================================================================================================= EVENTS =====================================================================================================
@@ -325,7 +323,7 @@ app.post("/api/event/create", async (req, res) => {
   }
 });
 
-//gets all events ------------**
+//gets all events
 app.get("/api/events/get", async (req, res) => {
   try {
     const events = await pool.query(
@@ -389,61 +387,73 @@ app.delete("/api/event/:id", async (req, res) => {
   }
 });
 
-app.listen(5001, () => {
-  console.log("swim app is running!!");
+// ====================================================================================================================================================================================================================
+
+// ================================================================================================= PACKAGES =====================================================================================================
+//
+
+app.post("/api/packages/update", async (req, res) => {
+  try {
+    const { id, amount } = req.body;
+    const remaining = await pool.query(`SELECT * from packages WHERE id=${id}`);
+    if (remaining.rows.length == 0) {
+      const newPackage = await pool.query(
+        `INSERT into packages (id, remaining) VALUES (${id}, ${amount})`
+      );
+    }
+
+    const newRemaining = remaining.rows[0].remaining + parseInt(amount);
+    const addNewRemaining = await pool.query(
+      `UPDATE packages SET remaining = ${newRemaining} WHERE id = ${id}`
+    );
+
+    res.json({ status: "ok", message: "updated package" });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
 });
+
+app.delete("/api/packages/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const remaining = await pool.query(`SELECT * from packages WHERE id=${id}`);
+
+    if (remaining.rows.length == 0 || remaining.rows[0].remaining === 0) {
+      return res.status(401).send("No more packages");
+    }  
+    const newRemaining = remaining.rows[0].remaining - 1;
+    const addNewRemaining = await pool.query(
+      `UPDATE packages SET remaining = ${newRemaining} WHERE id = ${id}`
+    );
+    res.json({ status: "ok", message: "updated package" });
+
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
+});
+
+app.put("/api/packages/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const remaining = await pool.query(
+      `SELECT * from packages WHERE id= ${id}`
+    );
+
+    res.json(remaining.rows[0]);
+  } catch (err) {
+    console.log(err.message);
+    res.status(500);
+  }
+});
+
 
 // ====================================================================================================================================================================================================================
 
-// req.body = {
-//     name: 'john',
-//     age: 12,
-//     level: 2
-// }
-
-// Object.keys(req.body).forEach((key) => {
-//     let query = `UPDATE students SET $1 = $2`
-//     let results = pool.query(query, [key, req.body[key]])
-// })
-
-// //gets a instructor profile
-// app.get("/api/instructor/:id", async (req, res) => {
-//     try {
-//       const profile = await pool.query(
-//         `SELECT * from instructors WHERE id = ${id}`
-// );
-//       res.json(profile.rows);
-//     } catch (err) {
-//       console.log(err.message);
-//     }
-//   });
-
-//   //updates instructor
-//   app.patch("/api/instructor/:id", (req, res) => {
-//     try {
-//       const profile = req.body;
-//       Object.keys(profile).forEach(async (key) => {
-//         results = await pool.query(
-//           `UPDATE instructors SET ${key} = '${req.body[key]}';`
-//         );
-//       });
-//       res.json({ status: "ok", message: "profile is updated" });
-//     } catch (err) {
-//       console.log(err.message);
-//     }
-//   });
-
-//gets a student profile
-// app.get("/api/student/:id", async (req, res) => {
-//   try {
-//     const profile = await pool.query("SELECT * from students WHERE id = $1", [
-//       req.params.id,
-//     ]);
-//     res.json(profile.rows);
-//   } catch (err) {
-//     console.log(err.message);
-//   }
-// });
+app.listen(5001, () => {
+  console.log("swim app is running!!");
+});
 
 // //update a student
 // app.patch("/api/student/:id", (req, res) => {

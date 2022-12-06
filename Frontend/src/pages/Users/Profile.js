@@ -1,13 +1,16 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect,useState } from "react";
 import { useNavigate } from "react-router-dom";
 import UserContext from "../../context";
 import { CgProfile } from "react-icons/cg";
 import { IconContext } from "react-icons";
+import { responsiveFontSizes } from "@mui/material";
 
-const Profile = () => {
+
+const Profile = ({remainingPackage}) => {
+  console.log(remainingPackage)
   const userCtx = useContext(UserContext);
   const navigate = useNavigate();
-
+  console.log(userCtx.userDetails.is_instructor)
   return (
     <>
       <div style={{ transform: "translate(45%, 50%)" }}>
@@ -15,16 +18,15 @@ const Profile = () => {
           <CgProfile />
         </IconContext.Provider>
       </div>
-      <section style={{transform:'translate(38%, 50%)'}}>
+      {userCtx.userDetails.is_instructor?"":<section style={{transform:'translate(38%, 50%)'}}>
       <h2 style={{color: 'white'}}>Number of packages left</h2>
       <div class="progress" style={{'width': '25vw', 'height': '40px'}}>
         <div
           class="progress-bar"
           role="progressbar"
-          style={{'width': '25%', backgroundColor:'#2E9CCA'}}
-          aria-valuenow="25"
+          style={{'width': `${remainingPackage.remainingPackage/50*100}%`, backgroundColor:'#2E9CCA'}}
           aria-valuemin="0"
-          aria-valuemax="100"
+          aria-valuemax="50"
         ></div>
       </div>
       <button className="btn btn-secondary w-20 m-4" type="submit" onClick={() => navigate("/")}>
@@ -33,7 +35,8 @@ const Profile = () => {
       <button className="btn btn-secondary w-20 m-4" type="submit" onClick={() => navigate("/package-form")}>
             Purchase Packages
         </button>
-        </section>
+        </section>}
+      
       <table
         className="table table-bordered w-25"
         style={{ transform: "translate(152%, 45%)" }}

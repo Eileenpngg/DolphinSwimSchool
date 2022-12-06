@@ -1,12 +1,11 @@
 import React, { useState, useContext, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { isRouteErrorResponse, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import UserContext from "../../context";
 
 import swimschoollogo from "../Instructors/Images/swimschoollogo.png";
 
 const BookClassForm = () => {
-  // To Do: Connect to back end
   const userCtx = useContext(UserContext);
   const navigate = useNavigate();
   const [classes, setClasses] = useState();
@@ -25,6 +24,7 @@ const BookClassForm = () => {
   const onSubmit = async (data) => {
     bookClass()
     console.log(data);
+    updatePackage()
     navigate("/book-class-success");
   };
 
@@ -67,7 +67,7 @@ const BookClassForm = () => {
     const response = await fetch(url, {
       method: "PUT",
       headers: {
-        Accept: "application/json",
+        "Accept": "application/json",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ level, date, time }),
@@ -90,7 +90,6 @@ const BookClassForm = () => {
       date,
       time,}) 
       {
-    console.log(url)
     const response = await fetch(url, {
       method: "POST",
       headers: {
@@ -109,7 +108,29 @@ const BookClassForm = () => {
     return jResponse;  
   }
 
-  //UseEffects
+  //Updates packages
+  async function updatePackage(
+    url= `http://127.0.0.1:5001/api/packages/${userCtx.userDetails.id}`,
+  ){
+    const response= await fetch(url,{
+      method:'DELETE',
+      headers:{
+        "Accept":"application/json",
+        "Content-Type":"application/json"
+      },
+    })
+    const jResponse= await response.json();
+    console.log(jResponse)
+    if (response.status===401){
+      console.log(`${jResponse.message}`)
+    } else{
+      console.log({...jResponse})
+    }
+    return jResponse
+  }
+
+
+  //Use Effects
   useEffect(() => {
     if (date !== undefined) {
       getClasses({ level: userCtx.userDetails.level, date });
