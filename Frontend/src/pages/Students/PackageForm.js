@@ -4,6 +4,7 @@ import UserContext from "../../context";
 const PackageForm = () => {
   const userCtx = useContext(UserContext);
   const [selectedAmount, setSelectedAmount] = useState(0);
+  const [purchaseStatus, setPurchaseStatus]=useState()
   const navigate= useNavigate()
   const handleClick = (e) => {
     setSelectedAmount(e.target.value);
@@ -13,6 +14,7 @@ const PackageForm = () => {
     handlePurchase({})
     navigate("/")
   }
+
   const handlePurchase = async ({
     url = "http://127.0.0.1:5001/api/packages/update",
     id= userCtx.userDetails.id, 
@@ -30,7 +32,8 @@ const PackageForm = () => {
     if (response.status === 401) {
       console.log(`${jResponse.message}`);
     } else {
-      console.log({ ...jResponse });
+      setPurchaseStatus(`${jResponse.message}`)
+      console.log(jResponse.message)
     }
     return jResponse;
   };

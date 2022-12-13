@@ -390,8 +390,7 @@ app.delete("/api/event/:id", async (req, res) => {
 // ====================================================================================================================================================================================================================
 
 // ================================================================================================= PACKAGES =====================================================================================================
-//
-
+//updates package based on amount purchased
 app.post("/api/packages/update", async (req, res) => {
   try {
     const { id, amount } = req.body;
@@ -400,14 +399,16 @@ app.post("/api/packages/update", async (req, res) => {
       const newPackage = await pool.query(
         `INSERT into packages (id, remaining) VALUES (${id}, ${amount})`
       );
+      res.json({ status: "ok", message: "new user inserted into package" });
+    } else if (remaining.rows[0].remaining >= 50) {
+      res.status(500).json({ status: "error", message: "unsuccessful" });
     }
 
     const newRemaining = remaining.rows[0].remaining + parseInt(amount);
     const addNewRemaining = await pool.query(
       `UPDATE packages SET remaining = ${newRemaining} WHERE id = ${id}`
     );
-
-    res.json({ status: "ok", message: "updated package" });
+    res.status(200).json({ status: "ok", message: "updated package" });
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
@@ -421,13 +422,12 @@ app.delete("/api/packages/:id", async (req, res) => {
 
     if (remaining.rows.length == 0 || remaining.rows[0].remaining === 0) {
       return res.status(401).send("No more packages");
-    }  
+    }
     const newRemaining = remaining.rows[0].remaining - 1;
     const addNewRemaining = await pool.query(
       `UPDATE packages SET remaining = ${newRemaining} WHERE id = ${id}`
     );
     res.json({ status: "ok", message: "updated package" });
-
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
@@ -447,7 +447,6 @@ app.put("/api/packages/:id", async (req, res) => {
     res.status(500);
   }
 });
-
 
 // ====================================================================================================================================================================================================================
 
