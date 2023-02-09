@@ -9,6 +9,7 @@ const Login = (props) => {
     setScreen(e.target.id);
   };
   return (
+    <>
     <div className="container-fluid d-flex justify-content-center">
       <div className="d-flex flex-column border border-fade rounded m-4 w-50">
         <h1 className="text-center mt-4 mb-0">{screen}</h1>
@@ -56,6 +57,7 @@ const Login = (props) => {
         )}
       </div>
     </div>
+    </>
   );
 };
 

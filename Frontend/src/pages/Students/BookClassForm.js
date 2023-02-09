@@ -3,8 +3,6 @@ import { isRouteErrorResponse, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import UserContext from "../../context";
 
-import swimschoollogo from "../Instructors/Images/swimschoollogo.png";
-
 const BookClassForm = () => {
   const userCtx = useContext(UserContext);
   const navigate = useNavigate();
@@ -316,7 +314,7 @@ const BookClassForm = () => {
             </div>
             <div className="col-md-1"></div>
             <div className="col-md-3 align-self-end">
-              <img src={swimschoollogo} alt="" width="300px" style={{transform:'translateY(-50%)'}}/>
+              <img src={'/swimschoollogo.png'} alt="swimschoollogo" width="300px" style={{transform:'translateY(-50%)'}}/>
             </div>
           </div>
           <div className="form-outline row justify-content-center">

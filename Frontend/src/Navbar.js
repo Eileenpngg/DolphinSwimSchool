@@ -10,7 +10,7 @@ const Navbar=()=>{
 <nav className={`${styles.nav}`}>
   <ul className={`menu ${styles.menu}`}>
     <li className={`menu headings ${styles.headings}`}><p className={`menu headingLink ${styles.headingLink}`} onClick={()=>navigate('/')}>Home</p></li>
-    <li className={`menu headings ${styles.headings}`}><a href="/about" className={`menu headingLink ${styles.headingLink}`}>About</a></li>
+    <li className={`menu headings ${styles.headings}`}><a href="#0" className={`menu headingLink ${styles.headingLink}`} onClick={()=>navigate('/about')}>About</a></li>
     <li className={`menu headings ${styles.headings}`}><a href="/contact"  className={`menu headingLink ${styles.headingLink}`}>Contact</a></li>
 
     <li className={`menu headings ${styles.headings}`}><a href="#0" className={`menu headingLink ${styles.headingLink}`}>Schedule</a>

@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import UserContext from "../../context";
-import swimschoollogo from "./Images/swimschoollogo.png";
 
 const CreateAClassForm = () => {
   // To Do: Connect to back end
@@ -193,7 +192,7 @@ const CreateAClassForm = () => {
               </div>
               <div className="col-md-1"></div>
               <div className="col-md-3 align-self-end">
-                <img src={swimschoollogo} alt="" width="300px" style={{transform:'translateY(-40%)'}}/>
+                <img src={'/swimschoollogo.png'} alt="swimschoollogo" width="300px" style={{transform:'translateY(-40%)'}}/>
               </div>
             </div>
           </form>

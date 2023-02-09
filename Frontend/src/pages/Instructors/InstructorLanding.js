@@ -9,7 +9,6 @@ import { IconContext } from "react-icons";
 import kidsswimming from "./Images/kidswimming.jpeg";
 import events from "./Images/events.jpeg";
 import purchasepackage from "./Images/purchasepackage.webp";
-import swimschoollogo from "./Images/swimschoollogo.png";
 
 const InstructorLanding = () => {
   const [imageIndex, setImageIndex] = useState(0);
@@ -60,9 +59,10 @@ const InstructorLanding = () => {
   return (
     <>
     <Navbar />
+    <div className='main'>
         <img 
-        src={swimschoollogo} 
-        alt={swimschoollogo}
+        src='/swimschoollogo.png'
+        alt='swimschoollogo'
         style={{
         transform: "translate(40%,-25%)",
         }}/>
@@ -111,6 +111,7 @@ const InstructorLanding = () => {
         </div>
       </section>
       <Footer />
+      </div>
     </>
   );
 };

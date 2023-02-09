@@ -15,6 +15,8 @@ import ClassSchedule from "./pages/Instructors/ClassSchedule";
 import CreateEventSuccess from "./pages/Screens/CreateEventSuccess";
 import BookClassSuccess from "./pages/Screens/BookClassSuccess";
 import Profile from "./pages/Users/Profile";
+import About from "./pages/Users/About";
+
 function App() {
   const [userDetails, setUserDetails] = useState({});
   const [remainingPackage, setRemainingPackage]=useState()
@@ -101,6 +103,7 @@ const landingPage = displayLandingPage();
 <Route path="/create-event-success" element={<CreateEventSuccess/>} />
 <Route path="/book-class-success" element={<BookClassSuccess/>} />
 <Route path="/profile" element={<Profile remainingPackage={{remainingPackage}}/>} />
+<Route path="/about" element={<About/>} />
 </Routes>
 </UserContext.Provider>
 

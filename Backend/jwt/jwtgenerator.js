@@ -2,11 +2,11 @@ const jwt= require ('jsonwebtoken')
 require('dotenv').config();
 
 const jwtGenerator=(req,res,next)=>{
-    const token= req.headers['authorization'].replace("Bearer","")
+    const token = req.headers['authorization'].replace("Bearer","")
 
     if(token){
         try {
-            decoded= jwt.verify(token, process.env.SECRET)
+            const decoded= jwt.verify(token, process.env.ACCESS_SECRET)
             req.decoded=decoded
             next()
     } catch(err){
@@ -26,3 +26,8 @@ const jwtGenerator=(req,res,next)=>{
 module.exports = jwtGenerator
 
 
+
+    
+        
+           
+    

@@ -7,6 +7,7 @@ const jwtGenerator = require("./jwt/jwtgenerator");
 const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
 
+
 //middleware
 app.use(cors());
 app.use(express.json());
@@ -54,7 +55,7 @@ app.post("/api/user/create", async (req, res) => {
 
 // ===============================================================================================================================================================================================================
 // ================================================================================================= LOGIN =====================================================================================================
-app.post("/api/user/login", async (req, res) => {
+app.post("/api/user/login" ,async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await pool.query(
@@ -99,43 +100,18 @@ app.post("/api/user/login", async (req, res) => {
         expiresIn: "20m",
         jwtid: uuidv4(),
       });
+
       const refresh = jwt.sign(payload, process.env.REFRESH_SECRET, {
         expiresIn: "30d",
         jwtid: uuidv4(),
       });
+      res.json(response);
     }
-    res.json(response);
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Login Failed");
   }
 });
-
-//REFRESH
-// router.post("/refresh", (req, res) => {
-//   try {
-//     const decoded = jwt.verify(req.body.refresh, process.env.REFRESH_SECRET);
-//     const payload = {
-//       id: decoded.id,
-//       name: decoded.name,
-//     };
-//     const access = jwt.sign(payload, process.env.ACCESS_SECRET, {
-//       expiresIn: "20m",
-//       jwtid: uuidv4(),
-//     });
-
-//     const response = {
-//       access,
-//     };
-//     res.json(response);
-//   } catch (err) {
-//     console.log("POST/users/refresh", err);
-//     res.status(401).json({
-//       status: "error",
-//       message: "unauthorised",
-//     });
-//   }
-// });
 
 // ================================================================================================= INSTRUCTORS =====================================================================================================
 
