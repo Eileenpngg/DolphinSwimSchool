@@ -13,16 +13,16 @@ const Profile = ({remainingPackage}) => {
   console.log(userCtx.userDetails.is_instructor)
   return (
     <>
-      <div style={{ transform: "translate(45%, 50%)" }}>
+      <div style={{ transform: "translate(46%, 50%)" }}>
         <IconContext.Provider value={{ color: "white", size: "8em" }}>
           <CgProfile />
         </IconContext.Provider>
       </div>
       {userCtx.userDetails.is_instructor?"":<section style={{transform:'translate(38%, 50%)'}}>
-      <h2 style={{color: 'white'}}>Number of packages left</h2>
-      <div class="progress" style={{'width': '25vw', 'height': '40px'}}>
+      <h2 style={{color: 'white' ,transform:'translateX(3.5%)'}}>Number of sessions left</h2>
+      <div className="progress" style={{'width': '25vw', 'height': '40px'}}>
         <div
-          class="progress-bar"
+          className="progress-bar"
           role="progressbar"
           style={{'width': `${remainingPackage.remainingPackage/50*100}%`, backgroundColor:'#2E9CCA'}}
           aria-valuemin="0"
