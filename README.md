@@ -12,7 +12,10 @@ A web application for a swim school for ease of creating and booking of classes 
 - CSS
 
 ### BackEnd
-- SQL
+- Node.js
+- JWT
+- Express
+- PostgreSQL
 
 ## Functionalities
 
@@ -66,6 +69,7 @@ https://user-images.githubusercontent.com/77367030/219833297-c36ca8d3-1c8f-412f-
 
 ### Purchase a package
 ![Screenshot 2023-02-18 at 1 25 08 PM](https://user-images.githubusercontent.com/77367030/219842783-02f40ee3-b396-4c2d-a0e6-6e8b65b9e827.png)
+Once package has been purchased, number of sessions from the profile page(view below) will be automatically topped up.
 
 ### View Profile
 ![Screenshot 2023-02-18 at 1 26 53 PM](https://user-images.githubusercontent.com/77367030/219842857-b7442c4c-23be-4e08-8594-c8006bae8e2c.png)
