@@ -11,7 +11,7 @@ const RegisterSuccess = () => {
       >
         <CheckCircleOutlinedIcon />
       </div>
-      <p className="text-center fw-boldeeed;e;e;;eededddwddweddddwwdwddwdwedewedwdededeed u93rr0390 3r9ujdfjknjkn" style={{color:'white'}}>
+      <p className="text-center fw-bold" style={{color:'white'}}>
             Proceed to login?{" "}
             <a
               className="link-primary"
