@@ -31,7 +31,6 @@ const BookClassForm = () => {
   };
 
 
-
   //Populates the classes available when date is selected
   async function getClasses({
     url = "http://127.0.0.1:5001/api/classes/get",
